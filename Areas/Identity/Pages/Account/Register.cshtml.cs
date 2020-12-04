@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -14,6 +13,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
+using FinancePortal.Services;
 
 namespace FinancePortal.Areas.Identity.Pages.Account
 {
@@ -24,17 +26,20 @@ namespace FinancePortal.Areas.Identity.Pages.Account
         private readonly UserManager<FPUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IImageService _imageService;
 
         public RegisterModel(
             UserManager<FPUser> userManager,
             SignInManager<FPUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _imageService = imageService;
         }
 
         [BindProperty]
@@ -47,12 +52,29 @@ namespace FinancePortal.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} character long.", MinimumLength = 2)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} character long.", MinimumLength = 2)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Display(Name = "Avatar")]
+            [NotMapped]
+            //[AllowedExtension(new string[] { ".jpg", ".jpeg", ".png"})]
+            //[MaxFileSize((1024 * 1024 * 2))]
+            public IFormFile FormFile { get; set; }
+
+
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -75,7 +97,20 @@ namespace FinancePortal.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new FPUser { UserName = Input.Email, Email = Input.Email };
+                var user = new FPUser
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    FileName = "Avatar-default.png",
+                    FileData = await _imageService.AssignAvatarAsync("Avatar-default.png")
+                };
+                if (Input.FormFile != null)
+                {
+                    user.FileName = Input.FormFile.FileName;
+                    user.FileData = _imageService.ConvertFileToByteArray(Input.FormFile);
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -106,10 +141,12 @@ namespace FinancePortal.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-            }
 
+            }
             // If we got this far, something failed, redisplay form
             return Page();
-        }
+        }   
+
     }
 }
+

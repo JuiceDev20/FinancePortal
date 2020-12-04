@@ -35,6 +35,8 @@ namespace FinancePortal
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings")); //Email services 44 + 45
             services.AddTransient<IEmailSender, EmailService>();
 
+            services.AddScoped<IImageService, ImageService>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

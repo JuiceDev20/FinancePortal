@@ -1,4 +1,5 @@
 ﻿using FinancePortal.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,6 +23,13 @@ namespace FinancePortal.Controllers
         {
             return View();
         }
+
+        [AllowAnonymous]
+        public IActionResult Landing()
+        {
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {
