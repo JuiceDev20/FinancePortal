@@ -1,0 +1,79 @@
+﻿@page
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+
+
+<body class="theme-green">
+
+
+    <style>
+        body {
+            background-image: url('/assets/images/Finance-1.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+    <!------------------>
+    <!-- Login Button -->
+    <!------------------>
+    <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Login" style="position:fixed; top:50%; left:55%; margin-right:-45%; transform: translate(-50%, -50%)">
+        Login
+    </a>
+
+    <!--------------------------------------------------->
+    <!-- Button to Open the Modal on the Landing page.-->
+    <!--------------------------------------------------->
+    <button type="button" style="position:fixed; top:50%; left:50%; margin-right:-50%; transform: translate(-50%, -50%)" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
+        About
+    </button>
+
+    <!--------------->
+    <!-- The Modal -->
+    <!--------------->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog-centered modal-dialog modal-xl">
+            <div class="modal-content">
+                <!------------------>
+                <!-- Modal Header -->
+                <!------------------>
+                <div class="modal-header justify-content-center bg-secondary">
+                    <h4 class="modal-title text-white">About Money Tracker</h4>
+                </div>
+                <!---------------->
+                <!-- Modal body -->
+                <!---------------->
+                <div class="modal-body bg-light justify-content-center">
+                    <pre><strong>
+                        Money Tracker is a Web-based software application designed to mirror any of a wide variety of expense tracking
+                        software systems in use by corporations throughout world. 
+
+                        Money Tracker is built using C#, MVC, MS Code-First database schema Entity Framework with user- and role-level security,
+                        and web pages built with HTML4, Twitter Bootstrap, and model binding with Razor.
+
+                        Money Tracker is commercial-grade and performs to professional standards, comparable to similar commercial applications.
+                        It allows users to open accounts, invite others to join, manage users, and track spending.
+
+                        Money Tracker is fully secured using Authentication and Authorization through Microsoft Entity Framework to prevent
+                        unauthorized persons from accessing user profile and account information. </strong>
+                    </pre>
+                </div>
+                <!------------------>
+                <!-- Modal footer -->
+                <!------------------>
+                <div class="modal-footer bg-secondary">
+                    <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/libscripts.bundle.js"></script>
+
+</body>
+</html>

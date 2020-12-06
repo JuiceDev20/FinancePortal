@@ -1,54 +1,185 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using FinancePortal.Services
+
+@inject IImageService ImageService
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FinancePortal</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <title>:: Money Tracker :: Home</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- This is my Favicon -->
+    <link rel="icon" href="~/images/MT-logo-sm.png" type="image/x-icon">
+
+    <!-- VENDOR CSS -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/chartist.css" rel="stylesheet" />
+    <link href="~/css/chartist-plugin-tooltip.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <link href="~/css/toastr.css" rel="stylesheet" />
+
+    @RenderSection("css", required: false)
+    <!-- Tiny MCE Script -->
+
+    <script src="//cdn.tiny.cloud/1/l8uevwuzno0ksw0hxsz567wbuc969qkmvc4abwbzq6rr348m/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src='//kit.fontawesome.com/a076d05399.js'></script>
+    <!-- MAIN CSS -->
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/color_skins.css" rel="stylesheet" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+<body class="theme-green">
+
+    <!----------------->
+    <!-- Page Loader -->
+    <!----------------->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="m-t-30"><img src="~/images/MT-logo-pl.png" alt="Money Tracker"></div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-------------------------->
+    <!-- Overlay For Sidebars -->
+    <!-------------------------->
+
+    <div id="wrapper">
+        <!---------------->
+        <!-- Top Navbar -->
+        <!---------------->
+        <nav class="navbar navbar-fixed-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FinancePortal</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-success" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-success" asp-area="" asp-controller="Home" asp-action="Privacy">Lobby</a>
-                        </li>
-                    </ul>
+                <div class="navbar-btn">
+                    <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
+                </div>
+
+                <div class="navbar-brand">
+                    <a asp-controller="Home" asp-action="Index"><img src="~/images/MT-logo-sm.png" alt="Money Tracker Logo" style="width: 48px; height:48px" class="img-responsive logo"></a>
+                </div>
+
+                <div class="navbar-right">
+                    <form id="navbar-search" class="navbar-form search-form">
+                        <input value="" class="form-control" placeholder="Search here..." type="text">
+                        <button type="button" class="btn btn-default"><i class="icon-magnifier"></i></button>
+                    </form>
+                    <!--------------------------------------------------------------->
+                    <!-- Top Navbar Right-Corner (Calendar, Chat, Email) Navigation-->
+                    <!--------------------------------------------------------------->
+
+                    <div id="navbar-menu">
+                        <ul class="nav navbar-nav">
+                            <li><a asp-controller="Home" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
+                            <li><a asp-controller="Home" asp-action="Dashboard" class="icon-menu d-none d-sm-block"><i class="icon-anchor"></i></a></li>
+                            @*<li><a asp-controller="Projects" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-grid"></i></a></li>
+                                <li><a asp-controller="Tickets" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-list"></i></a></li>*@
+
+
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <!---------------------->
+        <!-- Left Side Navbar -->
+        <!---------------------->
+
+        <div id="left-sidebar" class="sidebar">
+            <div class="sidebar-scroll">
+                <div class="user-account">
+                    <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
+                    <div class="dropdown bg-light">
+                        <partial name="_LoginPartial" />
+                        <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown bg-light"><strong></strong></a>
+                        <ul class="dropdown-menu dropdown-menu-right bg-light account animated flipInY">
+
+                            <li><a asp-controller="Home" asp-action="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home", new { area = "" })"><i class="icon-power"></i>Logout</a></li>
+                        </ul>
+                        <form class="form-check-inline bg-light" id="demologoutform" asp-area="Identiry" asp-page="/Account/Logout" asp-route-url="/Identity/Account/Login"></form>
+                    </div>
+                    <hr>
+                </div>
+                <!-------------->
+                <!-- Nav tabs -->
+                <!-------------->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#hr_menu"></a>Master Console</li>
+                    @*<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#project_menu">Projects</a></li>
+                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#setting">Tickets</a></li>*@
+
+                </ul>
+                <!------------------>
+                <!-- Overview Tab -->
+                <!------------------>
+                <div class="tab-content p-l-0 p-r-0">
+                    <div class="tab-pane animated fadeIn active" id="hr_menu">
+                        <nav class="sidebar-nav">
+                            <ul class="main-menu metismenu">
+                                <li class="nav-link active"><span>Navigation</span></li>
+                                <li><a asp-controller="HouseholdBankAccounts" asp-action="Index"><i class="icon-user"></i>Personal Acct.</a></li>
+                                <li><a asp-controller="HouseholdBankAccounts" asp-action="Index"><i class="icon-users"></i>Shared Acct.</a></li>
+                                <li><a asp-controller="Households" asp-action="Index"><i class="icon-globe"></i>Account Dashboard</a></li>
+                                <li><a asp-controller="Transactions" asp-action="Index"><i class="icon-book-open"></i>Transactions Dashboard</a></li>
+                                <li><a asp-controller="HouseholdCategories" asp-action="Index"><i class="icon-grid"></i>Budget Management</a></li>
+                                <li><a asp-controller="CategoryItems" asp-action="Index"><i class="icon-list"></i>Budget Item Mgmt.</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!------------------------------>
+        <!-- Render Body R-tag--------->
+        <!------------------------------>
+        <div class="container" style="margin-top: 90px; padding-right: 90px; padding-left: 300px">
+            <main>
+                @RenderBody()
+            </main>
+
+        </div>
+
     </div>
 
     <!------------>
     <!-- Footer -->
     <!------------>
+    <div>
+        <footer class="border-top footer w-100 fixed-bottom text-center text-success">
+            <div>
+                &copy; 2020 ~ Money Tracker ~ Created by: O J OLMO
+            </div>
+        </footer>
+    </div>
+    <!---------------->
+    <!-- Javascript -->
+    <!---------------->
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/libscripts.bundle.js"></script>
+    <script src="~/js/vendorscripts.bundle.js"></script>
+    <script src="~/js/toastr.js"></script>
+    <script src="~/js/chartist.bundle.js"></script>
+    <script src="~/js/knob.bundle.js"></script>
+    <script src="~/js/mainscripts.bundle.js"></script>
+    <script src="~/js/index.js"></script>
 
-    <footer class="border-top footer text-success">
-        <div class="container">
-            &copy; 2020 - Finance Portal - O J Olmo - Full Stack Software Developer
-        </div>
-    </footer>
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable();
+            tinymce.init({ selector: '#Body' });
+        });
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </script>
+
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>
