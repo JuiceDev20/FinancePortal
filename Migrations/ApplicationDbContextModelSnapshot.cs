@@ -29,11 +29,17 @@ namespace FinancePortal.Migrations
                     b.Property<decimal>("ActualAmount")
                         .HasColumnType("decimal(6, 2)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int>("HouseholdId")
+                    b.Property<int?>("HouseholdCategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("HouseholdId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -44,6 +50,10 @@ namespace FinancePortal.Migrations
                         .HasColumnType("decimal(6, 2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HouseholdCategoryId");
+
+                    b.HasIndex("HouseholdId");
 
                     b.ToTable("CategoryItem");
                 });
@@ -70,13 +80,13 @@ namespace FinancePortal.Migrations
                     b.Property<byte[]>("FileData")
                         .HasColumnType("bytea");
 
-                    b.Property<string>("FileName")
-                        .HasColumnType("text");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("character varying(30)")
                         .HasMaxLength(30);
+
+                    b.Property<int?>("HouseholdId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -117,6 +127,8 @@ namespace FinancePortal.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HouseholdId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -201,6 +213,11 @@ namespace FinancePortal.Migrations
                     b.Property<decimal>("CurrentBalance")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<string>("FPUserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(50);
+
                     b.Property<int>("HouseholdId")
                         .HasColumnType("integer");
 
@@ -209,15 +226,12 @@ namespace FinancePortal.Migrations
                         .HasColumnType("character varying(35)")
                         .HasMaxLength(35);
 
-                    b.Property<string>("PortalUserId")
-                        .IsRequired()
-                        .HasColumnType("character varying(50)")
-                        .HasMaxLength(50);
-
                     b.Property<decimal>("StartingBalance")
                         .HasColumnType("decimal(10, 2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FPUserId");
 
                     b.HasIndex("HouseholdId");
 
@@ -336,14 +350,14 @@ namespace FinancePortal.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(6, 2)");
 
-                    b.Property<int>("CategryItemId")
+                    b.Property<int?>("CategryItemId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("ContentType")
-                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FPUserId")
+                        .HasColumnType("text");
 
                     b.Property<int>("HouseholdBankAccountId")
                         .HasColumnType("integer");
@@ -355,11 +369,14 @@ namespace FinancePortal.Migrations
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("PortalUserId")
-                        .HasColumnType("character varying(35)")
-                        .HasMaxLength(35);
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FPUserId");
+
+                    b.HasIndex("HouseholdBankAccountId");
 
                     b.ToTable("Transaction");
                 });
@@ -494,6 +511,24 @@ namespace FinancePortal.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("FinancePortal.Models.CategoryItem", b =>
+                {
+                    b.HasOne("FinancePortal.Models.HouseholdCategory", null)
+                        .WithMany("CategoryItems")
+                        .HasForeignKey("HouseholdCategoryId");
+
+                    b.HasOne("FinancePortal.Models.Household", null)
+                        .WithMany("CategoryItems")
+                        .HasForeignKey("HouseholdId");
+                });
+
+            modelBuilder.Entity("FinancePortal.Models.FPUser", b =>
+                {
+                    b.HasOne("FinancePortal.Models.Household", null)
+                        .WithMany("Occupants")
+                        .HasForeignKey("HouseholdId");
+                });
+
             modelBuilder.Entity("FinancePortal.Models.HouseholdAttachment", b =>
                 {
                     b.HasOne("FinancePortal.Models.Household", null)
@@ -505,7 +540,13 @@ namespace FinancePortal.Migrations
 
             modelBuilder.Entity("FinancePortal.Models.HouseholdBankAccount", b =>
                 {
-                    b.HasOne("FinancePortal.Models.Household", null)
+                    b.HasOne("FinancePortal.Models.FPUser", "FPUser")
+                        .WithMany("HouseholdBankAccounts")
+                        .HasForeignKey("FPUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinancePortal.Models.Household", "Household")
                         .WithMany("BankAccounts")
                         .HasForeignKey("HouseholdId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -535,6 +576,19 @@ namespace FinancePortal.Migrations
                     b.HasOne("FinancePortal.Models.Household", null)
                         .WithMany("Notifications")
                         .HasForeignKey("HouseholdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FinancePortal.Models.Transaction", b =>
+                {
+                    b.HasOne("FinancePortal.Models.FPUser", "FPUser")
+                        .WithMany("Transactions")
+                        .HasForeignKey("FPUserId");
+
+                    b.HasOne("FinancePortal.Models.HouseholdBankAccount", "HouseholdBankAccount")
+                        .WithMany("Transactions")
+                        .HasForeignKey("HouseholdBankAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

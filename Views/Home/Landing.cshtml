@@ -6,54 +6,100 @@
 <!doctype html>
 <html lang="en">
 
+<head>
+    <title>:: Money Tracker :: Home</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- This is my Favicon -->
+    <link rel="icon" href="~/images/MT-logo-sm.png" type="image/x-icon">
 
-<body class="theme-green">
+    <!-- VENDOR CSS -->
+    <link href="~/cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/chartist.css" rel="stylesheet" />
+    <link href="~/css/chartist-plugin-tooltip.css" rel="stylesheet" />
+    
 
+    <link href="~/css/toastr.css" rel="stylesheet" />
 
-    <style>
-        body {
-            background-image: url('/assets/images/Finance-1.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-    </style>
+    <!-- Tiny MCE Script -->
 
-    <!------------------>
-    <!-- Login Button -->
-    <!------------------>
-    <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Login" style="position:fixed; top:50%; left:55%; margin-right:-45%; transform: translate(-50%, -50%)">
-        Login
-    </a>
+    <script src="//cdn.tiny.cloud/1/l8uevwuzno0ksw0hxsz567wbuc969qkmvc4abwbzq6rr348m/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src='//kit.fontawesome.com/a076d05399.js'></script>
+    <!-- MAIN CSS -->
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/color_skins.css" rel="stylesheet" />
+</head>
 
-    <!--------------------------------------------------->
-    <!-- Button to Open the Modal on the Landing page.-->
-    <!--------------------------------------------------->
-    <button type="button" style="position:fixed; top:50%; left:50%; margin-right:-50%; transform: translate(-50%, -50%)" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
-        About
-    </button>
+    <body class="theme-green">
 
-    <!--------------->
-    <!-- The Modal -->
-    <!--------------->
-    <div class="modal" id="myModal">
-        <div class="modal-dialog-centered modal-dialog modal-xl">
-            <div class="modal-content">
-                <!------------------>
-                <!-- Modal Header -->
-                <!------------------>
-                <div class="modal-header justify-content-center bg-secondary">
-                    <h4 class="modal-title text-white">About Money Tracker</h4>
+        <!---------------->
+        <!-- Top Navbar -->
+        <!---------------->
+        @*<nav class="navbar navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-btn">
+                    <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
                 </div>
-                <!---------------->
-                <!-- Modal body -->
-                <!---------------->
-                <div class="modal-body bg-light justify-content-center">
-                    <pre><strong>
-                        Money Tracker is a Web-based software application designed to mirror any of a wide variety of expense tracking
+
+                <div class="navbar-brand">
+                    <a asp-controller="Home" asp-action="Index"><img src="~/images/MT-logo-sm.png" alt="Money Tracker Logo" style="width: 48px; height:48px" class="img-responsive logo"></a>
+                </div>
+            </div>
+        </nav>*@
+
+        <div class="text-center" style="margin-top: 180px">
+            <h1 class="display-1 text-success">Welcome</h1>
+        </div>
+
+        <style>
+            body {
+                background-image: url('/images/Finance-1.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+        </style>
+
+        <!------------------>
+        <!-- Login Button -->
+        <!------------------>
+        <a class="nav-link btn btn-success" asp-area="Identity" asp-page="/Account/Login" style="position:fixed; top:50%; left:55%; margin-right:-45%; transform: translate(-50%, -50%)">
+            Login
+        </a>
+
+        <!--------------------------------------------------->
+        <!-- Button to Open the Modal on the Landing page.-->
+        <!--------------------------------------------------->
+        <button type="button" style="position:fixed; top:50%; left:50%; margin-right:-50%; transform: translate(-50%, -50%)" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+            About
+        </button>
+
+        <!--------------->
+        <!-- The Modal -->
+        <!--------------->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog-centered modal-dialog modal-xl">
+                <div class="modal-content">
+                    <!------------------>
+                    <!-- Modal Header -->
+                    <!------------------>
+                    <div class="modal-header justify-content-center bg-success">
+                        <h4 class="modal-title text-white">About Money Tracker</h4>
+                    </div>
+                    <!---------------->
+                    <!-- Modal body -->
+                    <!---------------->
+                    <div class="modal-body bg-light justify-content-center">
+                        <pre><strong>
+                        Money Tracker is a Web-based software application designed to mirror a wide variety of accounting and expense tracking
                         software systems in use by corporations throughout world. 
 
                         Money Tracker is built using C#, MVC, MS Code-First database schema Entity Framework with user- and role-level security,
-                        and web pages built with HTML4, Twitter Bootstrap, and model binding with Razor.
+                        web pages built with HTML4, CSS, Twitter Bootstrap, and model binding with Razor.
 
                         Money Tracker is commercial-grade and performs to professional standards, comparable to similar commercial applications.
                         It allows users to open accounts, invite others to join, manage users, and track spending.
@@ -61,19 +107,19 @@
                         Money Tracker is fully secured using Authentication and Authorization through Microsoft Entity Framework to prevent
                         unauthorized persons from accessing user profile and account information. </strong>
                     </pre>
-                </div>
-                <!------------------>
-                <!-- Modal footer -->
-                <!------------------>
-                <div class="modal-footer bg-secondary">
-                    <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
-                </div>
+                    </div>
+                    <!------------------>
+                    <!-- Modal footer -->
+                    <!------------------>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+                    </div>
 
+                </div>
             </div>
         </div>
-    </div>
 
-    <script src="~/js/libscripts.bundle.js"></script>
+        <script src="~/js/libscripts.bundle.js"></script>
 
-</body>
+    </body>
 </html>

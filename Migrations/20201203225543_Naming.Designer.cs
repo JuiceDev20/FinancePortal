@@ -211,7 +211,7 @@ namespace FinancePortal.Migrations
                         .HasColumnType("character varying(35)")
                         .HasMaxLength(35);
 
-                    b.Property<string>("PortalUserId")
+                    b.Property<string>("FPUserId")
                         .IsRequired()
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
@@ -354,7 +354,7 @@ namespace FinancePortal.Migrations
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("PortalUserId")
+                    b.Property<string>("FPUserId")
                         .HasColumnType("character varying(35)")
                         .HasMaxLength(35);
 

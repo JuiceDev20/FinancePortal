@@ -92,7 +92,7 @@ namespace FinancePortal.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategryItemId = table.Column<int>(nullable: false),
                     HouseholdBankAccountId = table.Column<int>(nullable: false),
-                    PortalUserId = table.Column<string>(maxLength: 35, nullable: true),
+                    FPUserId = table.Column<string>(maxLength: 35, nullable: true),
                     Created = table.Column<DateTimeOffset>(nullable: false),
                     ContentType = table.Column<string>(nullable: true),
                     Memo = table.Column<string>(maxLength: 100, nullable: true),
@@ -241,7 +241,7 @@ namespace FinancePortal.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     HouseholdId = table.Column<int>(nullable: false),
-                    PortalUserId = table.Column<string>(maxLength: 50, nullable: false),
+                    FPUserId = table.Column<string>(maxLength: 50, nullable: false),
                     Name = table.Column<string>(maxLength: 35, nullable: false),
                     AccountType = table.Column<int>(maxLength: 35, nullable: false),
                     StartingBalance = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),

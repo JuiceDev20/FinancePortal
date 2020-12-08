@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace FinancePortal.Models
 {
@@ -14,8 +11,11 @@ namespace FinancePortal.Models
             Attachments = new HashSet<HouseholdAttachment>();
             BankAccounts = new HashSet<HouseholdBankAccount>();
             Categories = new HashSet<HouseholdCategory>();
+            CategoryItems = new HashSet<CategoryItem>();
             Invitations = new HashSet<HouseholdInvitation>();
             Notifications = new HashSet<HouseholdNotification>();
+            Occupants = new HashSet<FPUser>();
+
         }
 
         public int Id { get; set; }
@@ -35,9 +35,14 @@ namespace FinancePortal.Models
 
         public virtual ICollection<HouseholdCategory> Categories { get; set;}
 
+        public virtual ICollection<CategoryItem> CategoryItems { get; set; }
+
         public virtual ICollection<HouseholdInvitation> Invitations { get; set; }
 
         public virtual ICollection<HouseholdNotification> Notifications { get; set; }
+
+        public virtual ICollection<FPUser> Occupants { get; set; }
+
 
     }
 }

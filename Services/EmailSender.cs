@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace FinancePortal.Services
 {
-    public class EmailService : IEmailSender
+    public class EmailSender : IEmailSender
     {
         private readonly MailSettings _mailSettings;
 
-        public EmailService(IOptions<MailSettings> mailSettings)
+        public EmailSender(IOptions<MailSettings> mailSettings)
         {
             _mailSettings = mailSettings.Value;
         }

@@ -54,7 +54,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategryItemId,HouseholdBankAccountId,PortalUserId,Created,ContentType,Memo,Amount,IsDeleted")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("Id,CategryItemId,HouseholdBankAccountId,FPUserId,Created,ContentType,Memo,Amount,IsDeleted")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategryItemId,HouseholdBankAccountId,PortalUserId,Created,ContentType,Memo,Amount,IsDeleted")] Transaction transaction)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CategryItemId,HouseholdBankAccountId,FPUserId,Created,ContentType,Memo,Amount,IsDeleted")] Transaction transaction)
         {
             if (id != transaction.Id)
             {

@@ -4,11 +4,85 @@
 @inject IImageService ImageService
 
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Welcome to Your Dashboard";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<p>Welcome to your Dashboard!</p>
+<div >
+    <div >
+        <h4>Money Tracker</h4>       
+        <div class="row">
+            <div class="col-4">
+                <a asp-controller="HouseholdBankAccounts" asp-action="Index">Personal Acct.</a>
+                <br />
+                <a asp-controller="HouseholdBankAccounts" asp-action="Index">Shared Acct.</a>
+                <br />
+                <a asp-controller="Households" asp-action="Index">Account Dashboard</a>
+                <br />
+                <a asp-controller="Transactions" asp-action="Index">Transactions Dashboard</a>
+                <br />
+                <a asp-controller="HouseholdCategories" asp-action="Index">Budget Management</a>
+                <br />
+                <a asp-controller="CategoryItems" asp-action="Index">Budget Item Mgmt.</a>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <h5>Welcome to my House</h5>
+                </div>
+                <div class="row">
+                    <h3>Household Occupants</h3>
+                    <form class="form-inline">
+                        <label for="First Name" class="mr-sm-2">FirstName:</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="First Name" >
+                        <label for="Last Name" class="mr-sm-2">LastName:</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Last Name" >
+                        <label for="email" class="mr-sm-2">Email address:</label>
+                        <input type="email" class="form-control mb-2 mr-sm-2" placeholder="Enter email" id="email">
+                        <label for="text" class="mr-sm-2">Role:</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Head" >
+                        <div class="form-check mb-2 mr-sm-2">
+                            <label class="form-label">Invite Members</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2">Send Invitation</button>
+                    </form>
+                </div>
+                <div class="row">
+                    <h3>Household Attachments</h3>
+                    <form class="form-inline">
+                        <label for="File Name" class="mr-sm-2">FileName:</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="File Name">
+                        <label for="Content Type" class="mr-sm-2">Content:</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Content Type">
+                        <label for="text" class="mr-sm-2">Description:</label>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Description">
+                        <div class="form-check mb-2 mr-sm-2">
+                            <label class="form-label">Download
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2">Download</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+<scripts>
+    var errorMessage = '@TempData["Message"]';
+    if (errorMessage != "") {
+    Swal.fire( {
+        icon: 'error',
+        title: 'Oops...'
+        text: errorMessage,
+        footer: 'Try again when you are the only one in the house!'
+    })
+    
+    }
+</scripts>
+
+}
 
 

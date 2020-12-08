@@ -55,7 +55,7 @@
         <!-- Top Navbar -->
         <!---------------->
         <nav class="navbar navbar-fixed-top">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-btn">
                     <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
                 </div>
@@ -91,13 +91,13 @@
         <!-- Left Side Navbar -->
         <!---------------------->
 
-        <div id="left-sidebar" class="sidebar">
+        <!--<div id="left-sidebar" class="sidebar">
             <div class="sidebar-scroll">
                 <div class="user-account">
                     <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
                     <div class="dropdown bg-light">
                         <partial name="_LoginPartial" />
-                        <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown bg-light"><strong></strong></a>
+                        <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong></strong></a>
                         <ul class="dropdown-menu dropdown-menu-right bg-light account animated flipInY">
 
                             <li><a asp-controller="Home" asp-action="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home", new { area = "" })"><i class="icon-power"></i>Logout</a></li>
@@ -109,16 +109,16 @@
                 <!-------------->
                 <!-- Nav tabs -->
                 <!-------------->
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#hr_menu"></a>Master Console</li>
+                <!--<ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#hr_menu"></a>Master Console</li>-->
                     @*<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#project_menu">Projects</a></li>
                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#setting">Tickets</a></li>*@
 
-                </ul>
+                @*</ul>-->*@
                 <!------------------>
                 <!-- Overview Tab -->
                 <!------------------>
-                <div class="tab-content p-l-0 p-r-0">
+                <!--<div class="tab-content p-l-0 p-r-0">
                     <div class="tab-pane animated fadeIn active" id="hr_menu">
                         <nav class="sidebar-nav">
                             <ul class="main-menu metismenu">
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         <!------------------------------>
