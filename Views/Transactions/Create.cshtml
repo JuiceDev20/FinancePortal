@@ -15,7 +15,7 @@
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @if (!User.IsInRole("Admin") || !User.IsInRole("Head"))
+            @if (!User.IsInRole("ADMIN") || !User.IsInRole("HEAD"))
             {
                 <input type="hidden" asp-for="HouseholdBankAccountId" class="form-control" />
                 <input type="hidden" asp-for="CategryItemId" class="form-control" />
@@ -23,7 +23,7 @@
                 <input asp-for="Created" class="form-control" />
             }
 
-            @if (User.IsInRole("Admin") || User.IsInRole("Head"))
+            @if (User.IsInRole("ADMIN") || User.IsInRole("HEAD"))
             {
 
                 <div class="form-group">

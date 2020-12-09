@@ -20,7 +20,7 @@
             <div class="col-4">
                 <ul>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-success" asp-controller="Households" asp-action="Create">Household Dashboard</a>
+                        <a class="nav-link btn btn-success" asp-controller="Households" asp-action="Dashboard">Household Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn btn-success" asp-controller="HouseholdBankAccounts" asp-action="Create">Create Bank Accounts</a>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="row">
                     <h3>Household Occupants</h3>
-                    <form class="form-inline">
+                    <form class="form-inline" asp-controller="HouseholdInvitations" asp-action="Create">
                         <label for="First Name" class="mr-md-2">FirstName:</label>
                         <input type="text" class="form-control mb-2 mr-md-2" placeholder="First Name">
                         <label for="Last Name" class="mr-md-2">LastName:</label>
@@ -76,7 +76,7 @@
                                     <td>
                                         @if (role == HouseholdRole.HEAD.ToString())
                                         {
-                                            <button type="submit" class="btn btn-primary mb-2">Send Invitation</button>
+                                            <button type="submit"  value="Create" class="btn btn-primary mb-2">Send Invitation</button>
                                         }
 
                                     </td>
@@ -113,7 +113,7 @@
             <!-- Modal body -->
             <!---------------->
             <div class="modal-body bg-light justify-content-center">
-                <form id="frmInvite" asp-controller="Invitations" asp-action="Create">
+                <form id="frmInvite" asp-controller="HouseholdInvitations" asp-action="Create">
                     @Html.AntiForgeryToken()
                     @*@Html.Hidden("HouseholdId", Model.Id)*@
                     <input type="hidden" name="HouseholdId" value="@Model.Id" />
@@ -182,6 +182,7 @@
                             <input name="Role" id="Role" type="text" class="form-control" />
                         </div>
                     </div>
+                    <button id="btnSend" type="submit" class="btn btn-success">Send</button>
                 </form>
             </div>
             <!------------------>
@@ -189,7 +190,6 @@
             <!------------------>
 
             <div class="modal-footer bg-light">
-                <button id="btnSend" class="btn btn-success">Send</button>
 
                 <button id="btnReset" type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
             </div>
@@ -211,5 +211,3 @@
     </script>
 
 }
-
-

@@ -294,7 +294,7 @@ namespace FinancePortal.Migrations
                     b.Property<bool>("IsValid")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("RecipientName")
+                    b.Property<string>("Email")
                         .HasColumnType("text");
 
                     b.Property<int>("RoleName")

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinancePortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201208163301_Modeladjust")]
-    partial class Modeladjust
+    [Migration("20201209174047_Everthing")]
+    partial class Everthing
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -285,6 +285,9 @@ namespace FinancePortal.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("Expires")
                         .HasColumnType("timestamp with time zone");
 
@@ -293,9 +296,6 @@ namespace FinancePortal.Migrations
 
                     b.Property<bool>("IsValid")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
 
                     b.Property<int>("RoleName")
                         .HasColumnType("integer");
@@ -352,6 +352,9 @@ namespace FinancePortal.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(6, 2)");
 
+                    b.Property<int?>("CategoryItemId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("CategryItemId")
                         .HasColumnType("integer");
 
@@ -375,6 +378,8 @@ namespace FinancePortal.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryItemId");
 
                     b.HasIndex("FPUserId");
 
@@ -515,7 +520,7 @@ namespace FinancePortal.Migrations
 
             modelBuilder.Entity("FinancePortal.Models.CategoryItem", b =>
                 {
-                    b.HasOne("FinancePortal.Models.HouseholdCategory", null)
+                    b.HasOne("FinancePortal.Models.HouseholdCategory", "HouseholdCategory")
                         .WithMany("CategoryItems")
                         .HasForeignKey("HouseholdCategoryId");
 
@@ -557,7 +562,7 @@ namespace FinancePortal.Migrations
 
             modelBuilder.Entity("FinancePortal.Models.HouseholdCategory", b =>
                 {
-                    b.HasOne("FinancePortal.Models.Household", null)
+                    b.HasOne("FinancePortal.Models.Household", "Household")
                         .WithMany("Categories")
                         .HasForeignKey("HouseholdId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -584,6 +589,10 @@ namespace FinancePortal.Migrations
 
             modelBuilder.Entity("FinancePortal.Models.Transaction", b =>
                 {
+                    b.HasOne("FinancePortal.Models.CategoryItem", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("CategoryItemId");
+
                     b.HasOne("FinancePortal.Models.FPUser", "FPUser")
                         .WithMany("Transactions")
                         .HasForeignKey("FPUserId");

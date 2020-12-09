@@ -16,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
 using FinancePortal.Services;
+using FinancePortal.Data;
+using FinancePortal.Enums;
 
 namespace FinancePortal.Areas.Identity.Pages.Account
 {
@@ -27,25 +29,32 @@ namespace FinancePortal.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IImageService _imageService;
+        private readonly ApplicationDbContext _dbContext;
 
         public RegisterModel(
             UserManager<FPUser> userManager,
             SignInManager<FPUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IImageService imageService)
+            IImageService imageService,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _imageService = imageService;
+            _dbContext = dbContext;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        public string Email { get; set; }
+
+        public string Code { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -66,6 +75,9 @@ namespace FinancePortal.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            public string Code { get; set; }
+
+
             [Display(Name = "Avatar")]
             [NotMapped]
             //[AllowedExtension(new string[] { ".jpg", ".jpeg", ".png"})]
@@ -85,9 +97,11 @@ namespace FinancePortal.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string email, string code, string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+            Email = email;
+            Code = code;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -106,12 +120,25 @@ namespace FinancePortal.Areas.Identity.Pages.Account
                     FileName = "Avatar-default.png",
                     FileData = await _imageService.AssignAvatarAsync("Avatar-default.png")
                 };
+                if (!string.IsNullOrEmpty(Input.Code))
+                {
+                    user.HouseholdId = _dbContext.HouseholdInvitation.FirstOrDefault(i => i.Code.ToString() == Input.Code).HouseholdId;
+                    user.EmailConfirmed = true;
+                }
                 if (Input.FormFile != null)
                 {
                     user.FileName = Input.FormFile.FileName;
                     user.FileData = _imageService.ConvertFileToByteArray(Input.FormFile);
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (!string.IsNullOrEmpty(Input.Code))
+                {
+                    await _userManager.AddToRoleAsync(user, nameof(HouseholdRole.MEMBER));
+                    await _signInManager.RefreshSignInAsync(user);
+                    return RedirectToAction("Dashboard", "Households");
+                }
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

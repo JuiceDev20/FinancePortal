@@ -46,7 +46,7 @@ namespace FinancePortal.Controllers
         }
 
         // GET: CategoryItems/Create
-        [Authorize(Roles = "Head, MEMBER")]
+        [Authorize(Roles = "HEAD, MEMBER")]
         public async Task<IActionResult> Create()
         {
             var householdId = (await _userManager.GetUserAsync(User)).HouseholdId;

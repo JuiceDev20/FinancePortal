@@ -280,7 +280,7 @@ namespace FinancePortal.Migrations
                     b.Property<int>("HouseholdId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("RecipientName")
+                    b.Property<string>("Email")
                         .HasColumnType("text");
 
                     b.Property<int>("RoleName")

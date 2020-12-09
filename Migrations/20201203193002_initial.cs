@@ -289,7 +289,7 @@ namespace FinancePortal.Migrations
                     Created = table.Column<DateTimeOffset>(nullable: false),
                     Expires = table.Column<DateTimeOffset>(nullable: false),
                     Accepted = table.Column<bool>(nullable: false),
-                    RecipientName = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
                     Subject = table.Column<string>(maxLength: 35, nullable: true),
                     Body = table.Column<string>(maxLength: 300, nullable: true),
                     RoleName = table.Column<int>(nullable: false),

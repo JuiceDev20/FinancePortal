@@ -59,7 +59,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HouseholdId,Expires,RecipientName,Subject,Body,RoleName")] HouseholdInvitation householdInvitation)
+        public async Task<IActionResult> Create([Bind("HouseholdId,Expires,Email,Subject,Body,RoleName")] HouseholdInvitation householdInvitation)
         {
             if (ModelState.IsValid)       //This step will trigger at least 1 of 3 possible scenarios: timely acceptance, late acceptance or no response.
             {
@@ -67,11 +67,14 @@ namespace FinancePortal.Controllers
                 householdInvitation.Created = DateTime.Now;
                 _context.Add(householdInvitation);
                 await _context.SaveChangesAsync();
+
                 var callbackUrl = Url.Action("AcceptedHouseholdInvitation", "HouseholdInvitations",
-                    new { email = householdInvitation.RecipientName, code = householdInvitation.Code }, protocol: Request.Scheme);
+                    new { email = householdInvitation.Email, code = householdInvitation.Code }, protocol: Request.Scheme);
+
                 var emailBody = $"{householdInvitation.Body} <br/> Register and accept by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>" +
                     $"or if already register you can log in and use the following code <br /> Household Invitation Code: {householdInvitation.Code}";
-                await _emailSender.SendEmailAsync(householdInvitation.RecipientName, householdInvitation.Subject, emailBody);
+
+                await _emailSender.SendEmailAsync(householdInvitation.Email, householdInvitation.Subject, emailBody);
                 return RedirectToAction("Details", "Households", new { id = householdInvitation.HouseholdId });
             }
             ViewData["HouseholdId"] = new SelectList(_context.Household, "Id", "Name", householdInvitation.HouseholdId);
@@ -112,14 +115,15 @@ namespace FinancePortal.Controllers
             }
 
             //Step 4: I am to presume the invitation is good
-            //Expectation: 1) Mark the invitation as Accepted  2) Mark the invitation as IsValid
+            //Expectation: 1) Mark the invitation as Accepted  
+            //2) Mark the invitation as IsValid
             // 3) Send user to custom registration 
             householdInvitation.Accepted = true;
             householdInvitation.IsValid = false;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Special Registration", new { code = householdInvitation.Code });
-
+            //return RedirectToAction("Special Registration", new { code = householdInvitation.Code });
+            return RedirectToPage("Account/Register", new { area = "Identity", email, code});
         }
 
         // GET: HouseholdInvitations/Edit/5
@@ -143,7 +147,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,HouseholdId,Created,Expires,Accepted,IsValid,RecipientName,Subject,Body,RoleName,Code")] HouseholdInvitation householdInvitation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,HouseholdId,Created,Expires,Accepted,IsValid,Email,Subject,Body,RoleName,Code")] HouseholdInvitation householdInvitation)
         {
             if (id != householdInvitation.Id)
             {

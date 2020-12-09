@@ -18,7 +18,7 @@ namespace FinancePortal.Models
         public bool IsValid { get; set; }
 
         [Display(Name = "Email")]
-        public string RecipientName { get; set; }
+        public string Email { get; set; }
 
         [StringLength(35, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Subject { get; set; }

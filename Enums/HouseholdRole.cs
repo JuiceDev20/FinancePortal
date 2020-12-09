@@ -7,9 +7,9 @@ namespace FinancePortal.Enums
 {
     public enum HouseholdRole
     {
-        Admin,
-        Head,
-        Member
+        ADMIN,
+        HEAD,
+        MEMBER
 
     }
 }

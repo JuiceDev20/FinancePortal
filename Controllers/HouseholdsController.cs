@@ -23,16 +23,14 @@ namespace FinancePortal.Controllers
             _userManager = userManage;
             _signInManager = signInManager;
 
+
         }
 
-        //[Authorized(Roles = "HEAD, MEMBER")] 
         [Authorize(Roles = "HEAD, MEMBER")]
-        public async Task<IActionResult> Dashboard(int? id)
+        public async Task<IActionResult> Dashboard()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+
+            var hhId = (await _userManager.GetUserAsync(User)).HouseholdId;
 
             var household = await _context.Household
                 .Include(h => h.Occupants)
@@ -42,7 +40,7 @@ namespace FinancePortal.Controllers
                 .ThenInclude(h => h.CategoryItems)
                 .Include(h => h.Occupants)
                 .ThenInclude(u => u.HouseholdBankAccounts)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == hhId);
             if (household == null)
             {
                 return NotFound();
@@ -58,7 +56,7 @@ namespace FinancePortal.Controllers
             var user = await _userManager.GetUserAsync(User);
             var memberCount = _context.Users.Where(u => u.HouseholdId == user.HouseholdId).Count();
 
-            if (User.IsInRole(nameof(HouseholdRole.Head)) && memberCount >1)
+            if (User.IsInRole(nameof(HouseholdRole.HEAD)) && memberCount >1)
             {
                 //Send rule reminder
                 TempData["Message"] = "You cannot leave the Household until until all the members have left.";
@@ -126,7 +124,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Greeting,Created")] Household household)
+        public async Task<IActionResult> Create([Bind("Name,Greeting")] Household household)
         {
             if (ModelState.IsValid)
             {
@@ -136,7 +134,7 @@ namespace FinancePortal.Controllers
                 await _context.SaveChangesAsync();
 
                 var currentUser = await _userManager.GetUserAsync(User);
-                await _userManager.AddToRoleAsync(currentUser, HouseholdRole.Head.ToString());
+                await _userManager.AddToRoleAsync(currentUser, HouseholdRole.HEAD.ToString());
                 currentUser.HouseholdId = household.Id;
                 await _context.SaveChangesAsync();
 
