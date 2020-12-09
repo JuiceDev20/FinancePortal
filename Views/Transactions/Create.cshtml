@@ -1,4 +1,6 @@
-﻿@model FinancePortal.Models.Transaction
+﻿@using FinancePortal.Enums
+
+@model FinancePortal.Models.Transaction
 
 @{
     ViewData["Title"] = "Create";
@@ -9,29 +11,40 @@
 <h4>Transaction</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CategryItemId" class="control-label"></label>
-                <input asp-for="CategryItemId" class="form-control" />
-                <span asp-validation-for="CategryItemId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HouseholdBankAccountId" class="control-label"></label>
-                <input asp-for="HouseholdBankAccountId" class="form-control" />
-                <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FPUserId" class="control-label"></label>
-                <input asp-for="FPUserId" class="form-control" />
-                <span asp-validation-for="FPUserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
+
+            @if (!User.IsInRole("Admin") || !User.IsInRole("Head"))
+            {
+                <input type="hidden" asp-for="HouseholdBankAccountId" class="form-control" />
+                <input type="hidden" asp-for="CategryItemId" class="form-control" />
+                <input type="hidden" asp-for="FPUserId" class="form-control" />
                 <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
+            }
+
+            @if (User.IsInRole("Admin") || User.IsInRole("Head"))
+            {
+
+                <div class="form-group">
+                    <label asp-for="CategryItemId" class="control-label"></label>
+                    <span asp-validation-for="CategryItemId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HouseholdBankAccountId" class="control-label"></label>
+                    <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FPUserId" class="control-label"></label>
+                    <span asp-validation-for="FPUserId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Created" class="control-label"></label>
+                    <span asp-validation-for="Created" class="text-danger"></span>
+                </div>
+
+            }
+
             <div class="form-group">
                 <label asp-for="Memo" class="control-label"></label>
                 <input asp-for="Memo" class="form-control" />

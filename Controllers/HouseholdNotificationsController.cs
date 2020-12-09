@@ -54,13 +54,13 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,HouseholdId,Created,Subject,Body,IsRead")] HouseholdNotification householdNotification)
+        public async Task<IActionResult> Create([Bind("HouseholdId,Created,Subject,Body,IsRead")] HouseholdNotification householdNotification)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(householdNotification);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(householdNotification);
         }
@@ -111,7 +111,7 @@ namespace FinancePortal.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(householdNotification);
         }
@@ -142,7 +142,7 @@ namespace FinancePortal.Controllers
             var householdNotification = await _context.HouseholdNotification.FindAsync(id);
             _context.HouseholdNotification.Remove(householdNotification);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Households");
         }
 
         private bool HouseholdNotificationExists(int id)

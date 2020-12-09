@@ -44,8 +44,9 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdCategories/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            ViewData["HouseholdId"] = id;
             return View();
         }
 
@@ -54,13 +55,13 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,HouseholdId,Name,Description")] HouseholdCategory householdCategory)
+        public async Task<IActionResult> Create([Bind("HouseholdId,Name,Description")] HouseholdCategory householdCategory)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(householdCategory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(householdCategory);
         }
@@ -111,7 +112,7 @@ namespace FinancePortal.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(householdCategory);
         }
@@ -142,7 +143,7 @@ namespace FinancePortal.Controllers
             var householdCategory = await _context.HouseholdCategory.FindAsync(id);
             _context.HouseholdCategory.Remove(householdCategory);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Households");
         }
 
         private bool HouseholdCategoryExists(int id)

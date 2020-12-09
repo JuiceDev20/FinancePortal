@@ -199,7 +199,7 @@ namespace FinancePortal.Controllers
             var householdInvitation = await _context.HouseholdInvitation.FindAsync(id);
             _context.HouseholdInvitation.Remove(householdInvitation);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Households");
         }
 
         private bool HouseholdInvitationExists(int id)

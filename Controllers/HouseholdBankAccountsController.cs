@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinancePortal.Data;
 using FinancePortal.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FinancePortal.Controllers
 {
     public class HouseholdBankAccountsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<FPUser> _userManager;
 
-        public HouseholdBankAccountsController(ApplicationDbContext context)
+        public HouseholdBankAccountsController(ApplicationDbContext context, UserManager<FPUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: HouseholdBankAccounts
@@ -44,8 +45,9 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdBankAccounts/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            ViewData["HouseholdId"] = id;
             return View();
         }
 
@@ -54,14 +56,19 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,HouseholdId,FPUserId,Name,AccountType,StartingBalance,CurrentBalance")] HouseholdBankAccount householdBankAccount)
+        public async Task<IActionResult> Create([Bind("HouseholdId,Name,AccountType,StartingBalance")] HouseholdBankAccount householdBankAccount)
         {
             if (ModelState.IsValid)
             {
+                householdBankAccount.FPUserId = _userManager.GetUserId(User);
+                householdBankAccount.CurrentBalance = householdBankAccount.StartingBalance;
                 _context.Add(householdBankAccount);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
+            ViewData["HouseholdId"] = new SelectList(_context.Household, "Id", "Id", householdBankAccount.HouseholdId);
+            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Id", householdBankAccount.FPUserId);
+
             return View(householdBankAccount);
         }
 
@@ -111,7 +118,7 @@ namespace FinancePortal.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(householdBankAccount);
         }
@@ -142,7 +149,7 @@ namespace FinancePortal.Controllers
             var householdBankAccount = await _context.HouseholdBankAccount.FindAsync(id);
             _context.HouseholdBankAccount.Remove(householdBankAccount);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Households");
         }
 
         private bool HouseholdBankAccountExists(int id)

@@ -2,6 +2,8 @@
 @using FinancePortal.Services
 
 @inject IImageService ImageService
+@inject Enum HouseholdRole  
+@inject UserManager<FPUser> UserManager
 
 @{
     ViewData["Title"] = "Welcome to Your Dashboard";
@@ -14,17 +16,36 @@
         <h4>Money Tracker</h4>       
         <div class="row">
             <div class="col-4">
-                <a asp-controller="HouseholdBankAccounts" asp-action="Index">Personal Acct.</a>
-                <br />
-                <a asp-controller="HouseholdBankAccounts" asp-action="Index">Shared Acct.</a>
-                <br />
-                <a asp-controller="Households" asp-action="Index">Account Dashboard</a>
-                <br />
-                <a asp-controller="Transactions" asp-action="Index">Transactions Dashboard</a>
-                <br />
-                <a asp-controller="HouseholdCategories" asp-action="Index">Budget Management</a>
-                <br />
-                <a asp-controller="CategoryItems" asp-action="Index">Budget Item Mgmt.</a>
+                <ul>
+                    <li class="nav-item">
+                    <a class="nav-link btn btn-success" asp-controller="Home" asp-action="Dashboard">Master Dashboard</a> 
+                    </li>                     
+                    <li class="nav-item">      
+                    <a class="nav-link btn btn-success" asp-controller="Households" asp-action="Dashboard">Household Dashboard</a> 
+                    </li>                      
+                    <li class="nav-item">      
+                    <a class="nav-link btn btn-success" asp-controller="HouseholdBankAccounts" asp-action="Create">Create Bank Accounts</a> 
+                    </li>                      
+                    <li class="nav-item">      
+                    <a class="nav-link btn btn-success" asp-controller="HouseholdCategories" asp-action="Create">Create a Category</a> 
+                    </li>                      
+                    <li class="nav-item">      
+                    <a class="nav-link btn btn-success" asp-controller="CategoryItems" asp-action="Create">Create a Category Item</a> 
+                    </li>                     
+                    <li class="nav-item">     
+                    <a class="nav-link btn btn-success" asp-controller="Transactions" asp-action="Create">Budget Item Mgmt.</a> 
+                    </li>
+
+                    @if (User.IsInRole("Member") || User.IsInRole("Head") && Model.Members.Count == 1)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-danger" asp-controller="Households" asp-action="Dashboard">Household Dashboard</a>
+                        </li>
+
+                    }
+
+                </ul>             
+
             </div>
             <div class="col-8">
                 <div class="row">
@@ -33,15 +54,15 @@
                 <div class="row">
                     <h3>Household Occupants</h3>
                     <form class="form-inline">
-                        <label for="First Name" class="mr-sm-2">FirstName:</label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="First Name" >
-                        <label for="Last Name" class="mr-sm-2">LastName:</label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Last Name" >
-                        <label for="email" class="mr-sm-2">Email address:</label>
-                        <input type="email" class="form-control mb-2 mr-sm-2" placeholder="Enter email" id="email">
-                        <label for="text" class="mr-sm-2">Role:</label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Head" >
-                        <div class="form-check mb-2 mr-sm-2">
+                        <label for="First Name" class="mr-md-2">FirstName:</label>
+                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="First Name" >
+                        <label for="Last Name" class="mr-md-2">LastName:</label>
+                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="Last Name" >
+                        <label for="email" class="mr-md-2">Email address:</label>
+                        <input type="email" class="form-control mb-2 mr-md-2" placeholder="Enter email" id="email">
+                        <label for="text" class="mr-md-2">Role:</label>
+                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="Head" >
+                        <div class="form-check mb-2 mr-md-2">
                             <label class="form-label">Invite Members</label>
                         </div>
                         <button type="submit" class="btn btn-primary mb-2">Send Invitation</button>
@@ -50,13 +71,13 @@
                 <div class="row">
                     <h3>Household Attachments</h3>
                     <form class="form-inline">
-                        <label for="File Name" class="mr-sm-2">FileName:</label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="File Name">
-                        <label for="Content Type" class="mr-sm-2">Content:</label>
+                        <label for="File Name" class="mr-md-2">FileName:</label>
+                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="File Name">
+                        <label for="Content Type" class="mr-md-2">Content:</label>
                         <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Content Type">
-                        <label for="text" class="mr-sm-2">Description:</label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Description">
-                        <div class="form-check mb-2 mr-sm-2">
+                        <label for="text" class="mr-md-2">Description:</label>
+                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="Description">
+                        <div class="form-check mb-2 mr-md-2">
                             <label class="form-label">Download
                             </label>
                         </div>
@@ -70,18 +91,6 @@
 
 @section scripts {
 
-<scripts>
-    var errorMessage = '@TempData["Message"]';
-    if (errorMessage != "") {
-    Swal.fire( {
-        icon: 'error',
-        title: 'Oops...'
-        text: errorMessage,
-        footer: 'Try again when you are the only one in the house!'
-    })
-    
-    }
-</scripts>
 
 }
 

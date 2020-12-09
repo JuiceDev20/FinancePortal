@@ -4,13 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Bank Accounts</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table m-b-0 table-hover">
+    <thead class="thead-green">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FPUserId)
@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(model => model.StartingBalance)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CurrentBalance)
+             
             </th>
             <th></th>
         </tr>
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.StartingBalance)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CurrentBalance)
+               
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

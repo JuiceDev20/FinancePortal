@@ -16,6 +16,8 @@ namespace FinancePortal.Models
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Description { get; set; }
 
+        public Household Household { get; set; }
+
         public ICollection<CategoryItem> CategoryItems { get; set; }
         public HouseholdCategory()
         {

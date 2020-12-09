@@ -1,4 +1,6 @@
-﻿@model FinancePortal.Models.HouseholdBankAccount
+﻿@using FinancePortal.Enums
+
+@model FinancePortal.Models.HouseholdBankAccount
 
 @{
     ViewData["Title"] = "Create";
@@ -9,18 +11,29 @@
 <h4>HouseholdBankAccount</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="HouseholdId" class="control-label"></label>
-                <select asp-for="HouseholdId" class ="form-control" asp-items="ViewBag.HouseholdId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FPUserId" class="control-label"></label>
-                <input asp-for="FPUserId" class="form-control" />
-                <span asp-validation-for="FPUserId" class="text-danger"></span>
-            </div>
+
+            @if (!User.IsInRole("Admin") || !User.IsInRole("Head"))
+            {
+                <input type="hidden" asp-for="HouseholdId" />
+                <input type="hidden" asp-for="FPUserId" />
+            }
+
+            @if (User.IsInRole("Admin") || User.IsInRole("Head"))
+            {
+                <div class="form-group">
+                    <label asp-for="HouseholdId" class="control-label"></label>
+                    <select asp-for="HouseholdId" class="form-control" asp-items="ViewBag.HouseholdId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FPUserId" class="control-label"></label>
+                    <span asp-validation-for="FPUserId" class="text-danger"></span>
+                </div>
+
+            }
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -28,18 +41,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="AccountType" class="control-label"></label>
-                <input asp-for="AccountType" class="form-control" />
+                <select asp-for="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
                 <span asp-validation-for="AccountType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StartingBalance" class="control-label"></label>
                 <input asp-for="StartingBalance" class="form-control" />
                 <span asp-validation-for="StartingBalance" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CurrentBalance" class="control-label"></label>
-                <input asp-for="CurrentBalance" class="form-control" />
-                <span asp-validation-for="CurrentBalance" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

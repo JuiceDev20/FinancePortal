@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinancePortal.Data;
 using FinancePortal.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FinancePortal.Controllers
 {
     public class TransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<FPUser> _userManager;
 
-        public TransactionsController(ApplicationDbContext context)
+        public TransactionsController(ApplicationDbContext context, UserManager<FPUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Transactions
@@ -44,8 +45,12 @@ namespace FinancePortal.Controllers
         }
 
         // GET: Transactions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var householdId = (await _userManager.GetUserAsync(User)).HouseholdId;
+            var myBankAccounts = _context.HouseholdBankAccount.Where(b => b.HouseholdId == householdId);
+            ViewData["HouseholdBankAccountId"] = new SelectList(myBankAccounts, "Id", "Name");
+            ViewData["CategoryItemId"] = new SelectList(_context.Set<CategoryItem>(), "Id", "Name");
             return View();
         }
 
@@ -54,14 +59,18 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CategryItemId,HouseholdBankAccountId,FPUserId,Created,ContentType,Memo,Amount,IsDeleted")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("CategryItemId,HouseholdBankAccountId,FPUserId,ContentType,Memo,Amount")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
+                transaction.FPUserId = _userManager.GetUserId(User);
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
+            ViewData["HouseholdBankAccountId"] = new SelectList(_context.HouseholdBankAccount, "Id", "Id");
+            ViewData["CategoryItemId"] = new SelectList(_context.Set<CategoryItem>(), "Id", "Id");
+            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Id", transaction);
             return View(transaction);
         }
 
@@ -86,7 +95,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CategryItemId,HouseholdBankAccountId,FPUserId,Created,ContentType,Memo,Amount,IsDeleted")] Transaction transaction)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CategryItemId,HouseholdBankAccountId,FPUserId,Created,ContentType,Memo,Amount")] Transaction transaction)
         {
             if (id != transaction.Id)
             {
@@ -111,7 +120,7 @@ namespace FinancePortal.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(transaction);
         }
@@ -142,7 +151,7 @@ namespace FinancePortal.Controllers
             var transaction = await _context.Transaction.FindAsync(id);
             _context.Transaction.Remove(transaction);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Households");
         }
 
         private bool TransactionExists(int id)

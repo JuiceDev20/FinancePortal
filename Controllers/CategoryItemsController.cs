@@ -4,16 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FinancePortal.Data;
 using FinancePortal.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinancePortal.Controllers
 {
     public class CategoryItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<FPUser> _userManager;
 
-        public CategoryItemsController(ApplicationDbContext context)
+        public CategoryItemsController(ApplicationDbContext context, UserManager<FPUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: CategoryItems
@@ -41,8 +46,14 @@ namespace FinancePortal.Controllers
         }
 
         // GET: CategoryItems/Create
-        public IActionResult Create()
+        [Authorize(Roles = "Head, MEMBER")]
+        public async Task<IActionResult> Create()
         {
+            var householdId = (await _userManager.GetUserAsync(User)).HouseholdId;
+
+            //Categories for my Household
+            ViewData["CategoryId"] = new SelectList(_context.HouseholdCategory.Where(c => c.HouseholdId == householdId), "Id", "Name");
+
             return View();
         }
 
@@ -51,14 +62,15 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,HouseholdId,Name,Description,TargetAmount,ActualAmount")] CategoryItem categoryItem)
+        public async Task<IActionResult> Create([Bind("CategoryId,Name,Description,TargetAmount")] CategoryItem categoryItem)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(categoryItem);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
+            ViewData["CategoryId"] = new SelectList(_context.HouseholdCategory, "Id", "Id", categoryItem);
             return View(categoryItem);
         }
 
@@ -83,7 +95,7 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,HouseholdId,Name,Description,TargetAmount,ActualAmount")] CategoryItem categoryItem)
+        public async Task<IActionResult> Edit(int id, [Bind("HouseholdId,Name,Description,TargetAmount")] CategoryItem categoryItem)
         {
             if (id != categoryItem.Id)
             {
@@ -108,7 +120,7 @@ namespace FinancePortal.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(categoryItem);
         }

@@ -61,7 +61,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    background-image: url('/assets/images/Finance-1.jpg');
+    background-image: url('/images/Finance-1.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }

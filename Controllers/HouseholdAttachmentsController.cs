@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinancePortal.Data;
 using FinancePortal.Models;
@@ -54,13 +51,13 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,HouseholdId,FileName,Description,Created,ContentType,FileData")] HouseholdAttachment householdAttachment)
+        public async Task<IActionResult> Create([Bind("HouseholdId,FileName,Description,Created,ContentType,FileData")] HouseholdAttachment householdAttachment)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(householdAttachment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Households");
             }
             return View(householdAttachment);
         }
@@ -142,7 +139,7 @@ namespace FinancePortal.Controllers
             var householdAttachment = await _context.HouseholdAttachment.FindAsync(id);
             _context.HouseholdAttachment.Remove(householdAttachment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Households");
         }
 
         private bool HouseholdAttachmentExists(int id)

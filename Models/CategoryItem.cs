@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinancePortal.Models
@@ -21,6 +22,16 @@ namespace FinancePortal.Models
 
         [Column(TypeName = "decimal(6, 2)")]
         public int ActualAmount { get; set; }   
+
+        public HouseholdCategory HouseholdCategory { get; set; }
+
+        public virtual ICollection<Transaction> Transactions { get; set; }
+
+        public CategoryItem()
+        {
+            Transactions = new HashSet<Transaction>();
+            
+        }
 
     }
 }
