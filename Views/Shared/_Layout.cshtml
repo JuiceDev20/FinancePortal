@@ -11,18 +11,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
     <!-- This is my Favicon -->
     <link rel="icon" href="~/images/MT-logo-sm.png" type="image/x-icon">
 
     <!-- VENDOR CSS -->
-
-    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="~/css/font-awesome.css" rel="stylesheet" />
     <link href="~/css/chartist.min.css" rel="stylesheet" />
     <link href="~/css/chartist-plugin-tooltip.css" rel="stylesheet" />
-
+    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="~/css/toastr.css" rel="stylesheet" />
 
     @RenderSection("css", required: false)
@@ -75,15 +73,12 @@
 
                     <div id="navbar-menu">
                         <ul class="nav navbar-nav">
-                            <li><a asp-controller="Households" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
+                            <li><a asp-controller="Home" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
                             <li><a asp-controller="Households" asp-action="Dashboard" class="icon-menu d-none d-sm-block"><i class="icon-anchor"></i></a></li>
-                            @*<li><a asp-controller="Projects" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-grid"></i></a></li>
-                                <li><a asp-controller="Tickets" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-list"></i></a></li>*@
-
-
+                            <li><a asp-controller="Home" asp-action="Landing" class="icon-menu d-none d-sm-block"><i class="icon-plane"></i></a></li>
+                                @*<li><a asp-controller="Tickets" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-list"></i></a></li>*@
                         </ul>
                     </div>
-
                 </div>
             </div>
         </nav>
@@ -140,7 +135,7 @@
         <!------------------------------>
         <!-- Render Body R-tag--------->
         <!------------------------------>
-        <div class="container" style="margin-top: 90px; padding-right: 90px; padding-left: 300px">
+        <div class="container-fluid" style="margin-top: 90px; padding-right: 90px; padding-left: 300px">
             <main>
                 @RenderBody()
             </main>
@@ -162,11 +157,10 @@
     <!---------------->
     <!-- Javascript -->
     <!---------------->
-    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="~/js/libscripts.bundle.js"></script>
     <script src="~/js/vendorscripts.bundle.js"></script>
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="~/js/toastr.js"></script>
-    
     <script src="~/js/chartist.bundle.js"></script>
     <script src="~/js/knob.bundle.js"></script>
     <script src="~/js/mainscripts.bundle.js"></script>

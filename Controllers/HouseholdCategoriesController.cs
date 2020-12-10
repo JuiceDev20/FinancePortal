@@ -4,16 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FinancePortal.Data;
 using FinancePortal.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinancePortal.Controllers
 {
     public class HouseholdCategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<FPUser> _userManager;
 
-        public HouseholdCategoriesController(ApplicationDbContext context)
+        public HouseholdCategoriesController(ApplicationDbContext context, UserManager<FPUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: HouseholdCategories
@@ -41,9 +44,9 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdCategories/Create
-        public IActionResult Create(int id)
+        public async Task<IActionResult> Create()
         {
-            ViewData["HouseholdId"] = id;
+            ViewData["HouseholdId"] = (await _userManager.GetUserAsync(User)).HouseholdId;
             return View();
         }
 

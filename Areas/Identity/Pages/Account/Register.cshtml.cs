@@ -134,7 +134,7 @@ namespace FinancePortal.Areas.Identity.Pages.Account
 
                 if (!string.IsNullOrEmpty(Input.Code))
                 {
-                    await _userManager.AddToRoleAsync(user, nameof(HouseholdRole.MEMBER));
+                    await _userManager.AddToRoleAsync(user, nameof(Enums.HouseholdRole.MEMBER));
                     await _signInManager.RefreshSignInAsync(user);
                     return RedirectToAction("Dashboard", "Households");
                 }

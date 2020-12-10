@@ -45,10 +45,14 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdBankAccounts/Create
-        public IActionResult Create(int id)
+        public async Task<IActionResult> Create()
         {
-            ViewData["HouseholdId"] = id;
-            return View();
+            var data = new HouseholdBankAccount
+            {
+                HouseholdId = (int)(await _userManager.GetUserAsync(User)).HouseholdId
+            };
+            //ViewData["HouseholdId"] = (await _userManager.GetUserAsync(User)).HouseholdId;
+            return View(data);
         }
 
         // POST: HouseholdBankAccounts/Create

@@ -214,9 +214,7 @@ namespace FinancePortal.Migrations
                         .HasColumnType("decimal(10, 2)");
 
                     b.Property<string>("FPUserId")
-                        .IsRequired()
-                        .HasColumnType("character varying(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("text");
 
                     b.Property<int>("HouseholdId")
                         .HasColumnType("integer");
@@ -284,7 +282,12 @@ namespace FinancePortal.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(35)")
+                        .HasMaxLength(35);
+
+                    b.Property<string>("EmailTo")
+                        .HasColumnType("character varying(35)")
+                        .HasMaxLength(35);
 
                     b.Property<DateTimeOffset>("Expires")
                         .HasColumnType("timestamp with time zone");
@@ -547,9 +550,7 @@ namespace FinancePortal.Migrations
                 {
                     b.HasOne("FinancePortal.Models.FPUser", "FPUser")
                         .WithMany("HouseholdBankAccounts")
-                        .HasForeignKey("FPUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FPUserId");
 
                     b.HasOne("FinancePortal.Models.Household", "Household")
                         .WithMany("BankAccounts")
@@ -569,7 +570,7 @@ namespace FinancePortal.Migrations
 
             modelBuilder.Entity("FinancePortal.Models.HouseholdInvitation", b =>
                 {
-                    b.HasOne("FinancePortal.Models.Household", null)
+                    b.HasOne("FinancePortal.Models.Household", "Household")
                         .WithMany("Invitations")
                         .HasForeignKey("HouseholdId")
                         .OnDelete(DeleteBehavior.Cascade)

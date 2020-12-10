@@ -10,8 +10,7 @@ namespace FinancePortal.Models
 
         public int HouseholdId { get; set; }
 
-        [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+
         public string FPUserId { get; set; }
 
         [Required]
@@ -30,6 +29,7 @@ namespace FinancePortal.Models
         public FPUser FPUser { get; set; }
 
         public Household Household { get; set; }
+
         public virtual ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
     }
 }

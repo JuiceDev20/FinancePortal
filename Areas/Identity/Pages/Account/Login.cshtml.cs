@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using FinancePortal.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using FinancePortal.Data;
 
 namespace FinancePortal.Areas.Identity.Pages.Account
 {
@@ -19,20 +18,31 @@ namespace FinancePortal.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<FPUser> _userManager;
+        private readonly IConfiguration _configuration;
         private readonly SignInManager<FPUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _context;
 
         public LoginModel(SignInManager<FPUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<FPUser> userManager)
+            UserManager<FPUser> userManager,
+            IConfiguration configuration,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
+            _configuration = configuration;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
+
+        public string Email { get; set; }
+
+        public string Code { get; set; }
+
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -43,6 +53,8 @@ namespace FinancePortal.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            public string Code { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -55,7 +67,7 @@ namespace FinancePortal.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string email, string code, string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -80,12 +92,18 @@ namespace FinancePortal.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
-                {
+                {    //Determine if the logged in user goes to the Lobby or the Dashboard
+                     //This can be done by looking at their HouseholdId  
                     _logger.LogInformation("User logged in.");
+                   
                     return RedirectToAction("Index", "Home");
+                    
+ 
                 }
+                        
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });

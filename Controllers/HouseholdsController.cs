@@ -8,6 +8,9 @@ using FinancePortal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using FinancePortal.Enums;
+using HouseholdRole = FinancePortal.Enums.HouseholdRole;
+using Microsoft.Extensions.Logging;
+using FinancePortal.Areas.Identity.Pages.Account;
 
 namespace FinancePortal.Controllers
 {
@@ -16,20 +19,21 @@ namespace FinancePortal.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<FPUser> _userManager;
         private readonly SignInManager<FPUser> _signInManager;
+        private readonly ILogger<RegisterModel> _logger;
 
-        public HouseholdsController(ApplicationDbContext context, UserManager<FPUser> userManage, SignInManager<FPUser> signInManager)
+        public HouseholdsController(ApplicationDbContext context, UserManager<FPUser> userManage, SignInManager<FPUser> signInManager, ILogger<RegisterModel> logger)
         {
             _context = context;
             _userManager = userManage;
             _signInManager = signInManager;
-
-
+            _logger = logger;
         }
 
         [Authorize(Roles = "HEAD, MEMBER")]
         public async Task<IActionResult> Dashboard()
         {
-
+            var user = await _userManager.GetUserAsync(User);
+            var houseId = user.HouseholdId;
             var hhId = (await _userManager.GetUserAsync(User)).HouseholdId;
 
             var household = await _context.Household
@@ -85,7 +89,7 @@ namespace FinancePortal.Controllers
 
             }
             //Step 7: Redirect to Lobby
-            return RedirectToAction("Lobby", "Home");
+            return RedirectToAction("Index", "Home");
 
         }
 
@@ -133,7 +137,8 @@ namespace FinancePortal.Controllers
                 _context.Add(household);
                 await _context.SaveChangesAsync();
 
-                var currentUser = await _userManager.GetUserAsync(User);
+                //var currentUser = await _userManager.GetUserAsync(User);
+                var currentUser = await _context.Users.FindAsync(_userManager.GetUserId(User));
                 await _userManager.AddToRoleAsync(currentUser, HouseholdRole.HEAD.ToString());
                 currentUser.HouseholdId = household.Id;
                 await _context.SaveChangesAsync();

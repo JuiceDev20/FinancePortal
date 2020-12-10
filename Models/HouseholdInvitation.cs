@@ -17,8 +17,11 @@ namespace FinancePortal.Models
 
         public bool IsValid { get; set; }
 
-        [Display(Name = "Email")]
+        [StringLength(35, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Email { get; set; }
+
+        [StringLength(35, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+        public string EmailTo { get; set; }
 
         [StringLength(35, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Subject { get; set; }
@@ -30,6 +33,6 @@ namespace FinancePortal.Models
 
         public Guid Code { get; set; } = Guid.NewGuid();
 
-
+        public Household Household { get; set; } 
     }
 }

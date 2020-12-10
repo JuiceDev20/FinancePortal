@@ -49,9 +49,14 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdInvitations/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            return View();
+            var householdInvitation = new HouseholdInvitation
+            {
+                HouseholdId = id.Value,
+                Expires = DateTime.Now
+            };
+            return View(householdInvitation);
         }
 
         // POST: HouseholdInvitations/Create
@@ -59,30 +64,31 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HouseholdId,Expires,Email,Subject,Body,RoleName")] HouseholdInvitation householdInvitation)
+        public async Task<IActionResult> Create([Bind("HouseholdId,Expires,EmailTo,Subject,Body")] HouseholdInvitation householdInvitation)
         {
             if (ModelState.IsValid)       //This step will trigger at least 1 of 3 possible scenarios: timely acceptance, late acceptance or no response.
             {
+                householdInvitation.IsValid = true;
                 householdInvitation.Code = Guid.NewGuid();
                 householdInvitation.Created = DateTime.Now;
                 _context.Add(householdInvitation);
                 await _context.SaveChangesAsync();
 
                 var callbackUrl = Url.Action("AcceptedHouseholdInvitation", "HouseholdInvitations",
-                    new { email = householdInvitation.Email, code = householdInvitation.Code }, protocol: Request.Scheme);
+                    new { email = householdInvitation.EmailTo, code = householdInvitation.Code }, protocol: Request.Scheme);
 
                 var emailBody = $"{householdInvitation.Body} <br/> Register and accept by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>" +
                     $"or if already register you can log in and use the following code <br /> Household Invitation Code: {householdInvitation.Code}";
 
-                await _emailSender.SendEmailAsync(householdInvitation.Email, householdInvitation.Subject, emailBody);
-                return RedirectToAction("Details", "Households", new { id = householdInvitation.HouseholdId });
+                await _emailSender.SendEmailAsync(householdInvitation.EmailTo, householdInvitation.Subject, emailBody);
+                return RedirectToAction("Dashboard", "Households");
             }
             ViewData["HouseholdId"] = new SelectList(_context.Household, "Id", "Name", householdInvitation.HouseholdId);
             return View(householdInvitation);
 
         }
 
-        public async Task<IActionResult> AcceptHouseholdInvitation(string email, string code)
+        public async Task<IActionResult> AcceptedHouseholdInvitation(string email, string code)
         {
 
             //Step 1: Determine if the invitation is good
@@ -123,7 +129,7 @@ namespace FinancePortal.Controllers
             await _context.SaveChangesAsync();
 
             //return RedirectToAction("Special Registration", new { code = householdInvitation.Code });
-            return RedirectToPage("Account/Register", new { area = "Identity", email, code});
+            return RedirectToPage("/Account/Register", new { area = "Identity", email, code});
         }
 
         // GET: HouseholdInvitations/Edit/5

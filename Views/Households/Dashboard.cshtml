@@ -44,47 +44,6 @@
                     }
 
                 </ul>
-
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <h5>Welcome to my House</h5>
-                </div>
-                <div class="row">
-                    <h3>Household Occupants</h3>
-                    <form class="form-inline" asp-controller="HouseholdInvitations" asp-action="Create">
-                        <label for="First Name" class="mr-md-2">FirstName:</label>
-                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="First Name">
-                        <label for="Last Name" class="mr-md-2">LastName:</label>
-                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="Last Name">
-                        <label for="email" class="mr-md-2">Email address:</label>
-                        <input type="email" class="form-control mb-2 mr-md-2" placeholder="Enter email" id="email">
-                        <label for="text" class="mr-md-2">Role:</label>
-                        <input type="text" class="form-control mb-2 mr-md-2" placeholder="Head">
-                        <div class="form-check mb-2 mr-md-2">
-                            <label class="form-label">Invite Members</label>
-                        </div>
-                        <tboby>
-                            @foreach (var member in Model.Occupants.ToList())
-                            {
-                                var role = (await userManager.GetRolesAsync(member)).FirstOrDefault();
-                                <tr>
-                                    <td> @member.FirstName</td>
-                                    <td> @member.LastName</td>
-                                    <td> @member.Email</td>
-                                    <td> @role</td>
-                                    <td>
-                                        @if (role == HouseholdRole.HEAD.ToString())
-                                        {
-                                            <button type="submit"  value="Create" class="btn btn-primary mb-2">Send Invitation</button>
-                                        }
-
-                                    </td>
-                                </tr>
-                            }
-                        </tboby>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -93,9 +52,12 @@
 <!------------------------------>
 <!-- Button to Open the Modal -->
 <!------------------------------>
+@if(User.IsInRole(nameof(HouseholdRole.HEAD)))
+{
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
     Create Invititation
 </button>
+}
 
 <!--------------->
 <!-- The Modal -->
@@ -143,7 +105,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Email</span>
                             </div>
-                            <input name="EmailTo" id="Recipient" type="email" class="form-control" />
+                            <input name="EmailTo" type="email" class="form-control" />
                         </div>
                     </div>
                     <br />
@@ -161,7 +123,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Message</span>
                             </div>
-                            <input name="Message" id="Message" type="text" class="form-control" />
+                            <textarea name="Message" type="text" class="form-control"></textarea>
                         </div>
                     </div>
                     <br />
@@ -170,18 +132,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Expires</span>
                             </div>
-                            <input name="Expires" id="Expires" type="text" class="form-control" />
+                            <input name="Expires" type="text" class="form-control" />
                         </div>
                     </div>
                     <br />
-                    <div class="col">
-                        <div class="input-group mb-6">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Role</span>
-                            </div>
-                            <input name="Role" id="Role" type="text" class="form-control" />
-                        </div>
-                    </div>
                     <button id="btnSend" type="submit" class="btn btn-success">Send</button>
                 </form>
             </div>
