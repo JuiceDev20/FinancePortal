@@ -5,18 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinancePortal.Models
 {
-    public class Transaction 
+    public class Transaction
     {
         public int Id { get; set; }
 
-        public int? CategryItemId { get; set; }
+        public int? CategoryItemId { get; set; }
+
+        public CategoryItem CategoryItem { get; set; }
 
         public int HouseholdBankAccountId { get; set; }
 
         public HouseholdBankAccount HouseholdBankAccount { get; set; }
 
-        public TransactionType  Type { get; set; }
-
+        public TransactionType Type { get; set; }
 
         public string FPUserId { get; set; }
 
@@ -27,11 +28,10 @@ namespace FinancePortal.Models
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Memo { get; set; }
 
-        [Column(TypeName = "decimal(6, 2)")]
-        public decimal Amount { get; set; }   
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Amount { get; set; }  
 
         public bool IsDeleted { get; set; }
-
 
 
     }

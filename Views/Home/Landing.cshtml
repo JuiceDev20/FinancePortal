@@ -35,12 +35,12 @@
     <link href="~/css/color_skins.css" rel="stylesheet" />
 </head>
 
-    <body class="theme-green">
+<body class="theme-green">
 
-        <!---------------->
-        <!-- Top Navbar -->
-        <!---------------->
-        @*<nav class="navbar navbar-fixed-top">
+    <!---------------->
+    <!-- Top Navbar -->
+    <!---------------->
+    @*<nav class="navbar navbar-fixed-top">
             <div class="container">
                 <div class="navbar-btn">
                     <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
@@ -52,49 +52,49 @@
             </div>
         </nav>*@
 
-        <div class="text-center" style="margin-top: 180px">
-            <h1 class="display-1 text-success">Welcome</h1>
-        </div>
+    <div class="text-center" style="margin-top: 180px">
+        <h1 class="display-1 text-success">Welcome</h1>
+    </div>
 
-        <style>
-            body {
-                background-image: url('/images/Finance-1.jpg');
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-        </style>
+    <style>
+        body {
+            background-image: url('/images/Finance-1.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
 
-        <!------------------>
-        <!-- Login Button -->
-        <!------------------>
-        <a class="nav-link btn btn-success" asp-area="Identity" asp-page="/Account/Login" style="position:fixed; top:50%; left:55%; margin-right:-45%; transform: translate(-50%, -50%)">
-            Login
-        </a>
+    <!------------------>
+    <!-- Login Button -->
+    <!------------------>
+    <a class="nav-link btn btn-success" asp-area="Identity" asp-page="/Account/Login" style="position:fixed; top:50%; left:55%; margin-right:-45%; transform: translate(-50%, -50%)">
+        Login
+    </a>
 
-        <!--------------------------------------------------->
-        <!-- Button to Open the Modal on the Landing page.-->
-        <!--------------------------------------------------->
-        <button type="button" style="position:fixed; top:50%; left:50%; margin-right:-50%; transform: translate(-50%, -50%)" class="btn btn-success" data-toggle="modal" data-target="#myModal">
-            About
-        </button>
+    <!--------------------------------------------------->
+    <!-- Button to Open the Modal on the Landing page.-->
+    <!--------------------------------------------------->
+    <button type="button" style="position:fixed; top:50%; left:50%; margin-right:-50%; transform: translate(-50%, -50%)" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+        About
+    </button>
 
-        <!--------------->
-        <!-- The Modal -->
-        <!--------------->
-        <div class="modal" id="myModal">
-            <div class="modal-dialog-centered modal-dialog modal-xl">
-                <div class="modal-content">
-                    <!------------------>
-                    <!-- Modal Header -->
-                    <!------------------>
-                    <div class="modal-header justify-content-center bg-success">
-                        <h4 class="modal-title text-white">About Money Tracker</h4>
-                    </div>
-                    <!---------------->
-                    <!-- Modal body -->
-                    <!---------------->
-                    <div class="modal-body bg-light justify-content-center">
-                        <pre><strong>
+    <!--------------->
+    <!-- The Modal -->
+    <!--------------->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog-centered modal-dialog modal-xl">
+            <div class="modal-content">
+                <!------------------>
+                <!-- Modal Header -->
+                <!------------------>
+                <div class="modal-header justify-content-center bg-success">
+                    <h4 class="modal-title text-white">About Money Tracker</h4>
+                </div>
+                <!---------------->
+                <!-- Modal body -->
+                <!---------------->
+                <div class="modal-body bg-light justify-content-center">
+                    <pre><strong>
                         Money Tracker is a Web-based software application designed to mirror a wide variety of accounting and expense tracking
                         software systems in use by corporations throughout world. 
 
@@ -107,19 +107,28 @@
                         Money Tracker is fully secured using Authentication and Authorization through Microsoft Entity Framework to prevent
                         unauthorized persons from accessing user profile and account information. </strong>
                     </pre>
-                    </div>
-                    <!------------------>
-                    <!-- Modal footer -->
-                    <!------------------>
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
-                    </div>
-
                 </div>
+                <!------------------>
+                <!-- Modal footer -->
+                <!------------------>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+                </div>
+
             </div>
         </div>
+    </div>
+    <!---------------->
+    <!-- Javascript -->
+    <!---------------->
+    <script src="~/js/libscripts.bundle.js"></script>
+    <script src="~/js/vendorscripts.bundle.js"></script>
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/toastr.js"></script>
+    <script src="~/js/chartist.bundle.js"></script>
+    <script src="~/js/knob.bundle.js"></script>
+    <script src="~/js/mainscripts.bundle.js"></script>
+    <script src="~/js/index.js"></script>
 
-        <script src="~/libscripts.bundle.js"></script>
-
-    </body>
+</body>
 </html>

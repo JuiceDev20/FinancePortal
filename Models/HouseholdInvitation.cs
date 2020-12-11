@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancePortal.Data;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FinancePortal.Models
@@ -29,7 +30,7 @@ namespace FinancePortal.Models
         [StringLength(300, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Body { get; set; }
 
-        public int RoleName { get; set; }
+        public HouseholdRole RoleName { get; set; }
 
         public Guid Code { get; set; } = Guid.NewGuid();
 
