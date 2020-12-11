@@ -12,9 +12,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
+    <!------------------------>
     <!-- This is my Favicon -->
+    <!------------------------>
     <link rel="icon" href="~/images/MT-logo-sm.png" type="image/x-icon">
-
     <!-- VENDOR CSS -->
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/font-awesome.min.css" rel="stylesheet" />
@@ -24,8 +25,10 @@
     <link href="~/css/toastr.css" rel="stylesheet" />
 
     @RenderSection("css", required: false)
+ 
+    <!--------------------->
     <!-- Tiny MCE Script -->
-
+    <!--------------------->
     <script src="//cdn.tiny.cloud/1/l8uevwuzno0ksw0hxsz567wbuc969qkmvc4abwbzq6rr348m/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src='//kit.fontawesome.com/a076d05399.js'></script>
@@ -47,7 +50,6 @@
     <!-------------------------->
     <!-- Overlay For Sidebars -->
     <!-------------------------->
-
     <div id="wrapper">
         <!---------------->
         <!-- Top Navbar -->
@@ -57,7 +59,6 @@
                 <div class="navbar-btn">
                     <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
                 </div>
-
                 <div class="navbar-brand">
                     <a asp-controller="Home" asp-action="Index"><img src="~/images/MT-logo-sm.png" alt="Money Tracker Logo" style="width: 48px; height:48px" class="img-responsive logo"></a>
                 </div>
@@ -70,7 +71,6 @@
                     <!--------------------------------------------------------------->
                     <!-- Top Navbar Right-Corner (Calendar, Chat, Email) Navigation-->
                     <!--------------------------------------------------------------->
-
                     <div id="navbar-menu">
                         <ul class="nav navbar-nav">
                             <li><a asp-controller="Home" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
@@ -82,55 +82,6 @@
                 </div>
             </div>
         </nav>
-        <!---------------------->
-        <!-- Left Side Navbar -->
-        <!---------------------->
-
-        <!--<div id="left-sidebar" class="sidebar">
-            <div class="sidebar-scroll">
-                <div class="user-account">
-                    <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
-                    <div class="dropdown bg-light">
-                        <partial name="_LoginPartial" />
-                        <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong></strong></a>
-                        <ul class="dropdown-menu dropdown-menu-right bg-light account animated flipInY">
-
-                            <li><a asp-controller="Home" asp-action="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home", new { area = "" })"><i class="icon-power"></i>Logout</a></li>
-                        </ul>
-                        <form class="form-check-inline bg-light" id="demologoutform" asp-area="Identiry" asp-page="/Account/Logout" asp-route-url="/Identity/Account/Login"></form>
-                    </div>
-                    <hr>
-                </div>
-                <!-------------->
-                <!-- Nav tabs -->
-                <!-------------->
-                <!--<ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#hr_menu"></a>Master Console</li>-->
-                    @*<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#project_menu">Projects</a></li>
-                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#setting">Tickets</a></li>*@
-
-                @*</ul>-->*@
-                <!------------------>
-                <!-- Overview Tab -->
-                <!------------------>
-                <!--<div class="tab-content p-l-0 p-r-0">
-                    <div class="tab-pane animated fadeIn active" id="hr_menu">
-                        <nav class="sidebar-nav">
-                            <ul class="main-menu metismenu">
-                                <li class="nav-link active"><span>Navigation</span></li>
-                                <li><a asp-controller="HouseholdBankAccounts" asp-action="Index"><i class="icon-user"></i>Personal Acct.</a></li>
-                                <li><a asp-controller="HouseholdBankAccounts" asp-action="Index"><i class="icon-users"></i>Shared Acct.</a></li>
-                                <li><a asp-controller="Households" asp-action="Index"><i class="icon-globe"></i>Account Dashboard</a></li>
-                                <li><a asp-controller="Transactions" asp-action="Index"><i class="icon-book-open"></i>Transactions Dashboard</a></li>
-                                <li><a asp-controller="HouseholdCategories" asp-action="Index"><i class="icon-grid"></i>Budget Management</a></li>
-                                <li><a asp-controller="CategoryItems" asp-action="Index"><i class="icon-list"></i>Budget Item Mgmt.</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
 
         <!------------------------------>
         <!-- Render Body R-tag--------->
@@ -139,9 +90,7 @@
             <main>
                 @RenderBody()
             </main>
-
         </div>
-
     </div>
 
     <!------------>

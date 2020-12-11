@@ -70,7 +70,7 @@ namespace FinancePortal.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Dashboard", "Households");
             }
-            ViewData["CategoryId"] = new SelectList(_context.HouseholdCategory, "Id", "Id", categoryItem);
+            ViewData["CategoryId"] = new SelectList(_context.HouseholdCategory, "Id", "Name", categoryItem);
             return View(categoryItem);
         }
 

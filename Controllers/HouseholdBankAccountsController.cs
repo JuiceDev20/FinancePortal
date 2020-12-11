@@ -71,7 +71,7 @@ namespace FinancePortal.Controllers
                 return RedirectToAction("Dashboard", "Households");
             }
             ViewData["HouseholdId"] = new SelectList(_context.Household, "Id", "Id", householdBankAccount.HouseholdId);
-            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Id", householdBankAccount.FPUserId);
+            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Name", householdBankAccount.FPUserId);
 
             return View(householdBankAccount);
         }
@@ -84,12 +84,15 @@ namespace FinancePortal.Controllers
                 return NotFound();
             }
 
-            var householdBankAccount = await _context.HouseholdBankAccount.FindAsync(id);
-            if (householdBankAccount == null)
+            var model = await _context.HouseholdBankAccount.FindAsync(id);
+            if (model == null)
             {
                 return NotFound();
             }
-            return View(householdBankAccount);
+
+            var userId = _userManager.GetUserId(User);
+            model.FPUserId = userId;
+            return View(model);
         }
 
         // POST: HouseholdBankAccounts/Edit/5
@@ -97,9 +100,9 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,HouseholdId,FPUserId,Name,AccountType,StartingBalance,CurrentBalance")] HouseholdBankAccount householdBankAccount)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FPUserId,HouseholdId,Name,AccountType,StartingBalance,CurrentBalance")] HouseholdBankAccount model)
         {
-            if (id != householdBankAccount.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -108,12 +111,12 @@ namespace FinancePortal.Controllers
             {
                 try
                 {
-                    _context.Update(householdBankAccount);
+                    _context.Update(model);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HouseholdBankAccountExists(householdBankAccount.Id))
+                    if (!HouseholdBankAccountExists(model.Id))
                     {
                         return NotFound();
                     }
@@ -124,7 +127,7 @@ namespace FinancePortal.Controllers
                 }
                 return RedirectToAction("Dashboard", "Households");
             }
-            return View(householdBankAccount);
+            return View(model);
         }
 
         // GET: HouseholdBankAccounts/Delete/5

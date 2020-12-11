@@ -1,7 +1,13 @@
-﻿@model IEnumerable<FinancePortal.Models.HouseholdBankAccount>
+﻿@using FinancePortal.Data
+
+@inject ApplicationDbContext context 
+
+@model IEnumerable<FinancePortal.Models.HouseholdBankAccount>
+
 
 @{
     ViewData["Title"] = "Index";
+  
 }
 
 <h1>Bank Accounts</h1>
@@ -13,7 +19,7 @@
     <thead class="thead-green">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FPUserId)
+               @Html.DisplayNameFor(model => model.FPUserId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -34,7 +40,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FPUserId)
+                @context.Users.Find(item.FPUserId).FullName
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

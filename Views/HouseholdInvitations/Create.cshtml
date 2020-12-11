@@ -9,11 +9,11 @@
 
 <h1>Create</h1>
 
-<h4>HouseholdInvitation</h4>
+<h4>New Invitation</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             @if (!User.IsInRole("ADMIN") || !User.IsInRole("HEAD"))
