@@ -20,9 +20,12 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdCategories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.HouseholdCategory.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            var user = _context.Users.Find(userId);
+
+            return View(await _context.HouseholdCategory.Where(u => u.HouseholdId == user.HouseholdId).ToListAsync());
         }
 
         // GET: HouseholdCategories/Details/5
@@ -46,8 +49,12 @@ namespace FinancePortal.Controllers
         // GET: HouseholdCategories/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["HouseholdId"] = (await _userManager.GetUserAsync(User)).HouseholdId;
-            return View();
+            var householdCategory = new HouseholdCategory
+            {
+                HouseholdId = (int)(await _userManager.GetUserAsync(User)).HouseholdId
+            };
+            
+            return View(householdCategory);
         }
 
         // POST: HouseholdCategories/Create

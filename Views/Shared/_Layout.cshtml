@@ -1,7 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using FinancePortal.Services
+@using FinancePortal.Data
 
 @inject IImageService ImageService
+@inject UserManager<FPUser> UserManager
+@inject ApplicationDbContext Context  
 
 
 <!DOCTYPE html>
@@ -21,11 +24,9 @@
     <link href="~/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/css/chartist.min.css" rel="stylesheet" />
     <link href="~/css/chartist-plugin-tooltip.css" rel="stylesheet" />
-    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <link href="~/css/toastr.css" rel="stylesheet" />
 
-    @RenderSection("css", required: false)
- 
     <!--------------------->
     <!-- Tiny MCE Script -->
     <!--------------------->
@@ -33,8 +34,9 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src='//kit.fontawesome.com/a076d05399.js'></script>
     <!-- MAIN CSS -->
-    <link href="~/css/main.css" rel="stylesheet" />
     <link href="~/css/color_skins.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+
 </head>
 <body class="theme-green">
 
@@ -73,20 +75,56 @@
                     <!--------------------------------------------------------------->
                     <div id="navbar-menu">
                         <ul class="nav navbar-nav">
-                            <li><a asp-controller="Home" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
-                            <li><a asp-controller="Households" asp-action="Dashboard" class="icon-menu d-none d-sm-block"><i class="icon-anchor"></i></a></li>
+                            <li><a asp-controller="Households" asp-action="Dashboard" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
+                            <li><a asp-controller="Households" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-anchor"></i></a></li>
                             <li><a asp-controller="Home" asp-action="Landing" class="icon-menu d-none d-sm-block"><i class="icon-plane"></i></a></li>
-                                @*<li><a asp-controller="Tickets" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-list"></i></a></li>*@
+
                         </ul>
                     </div>
                 </div>
             </div>
         </nav>
 
+        @if (User.IsInRole("HEAD") || User.IsInRole("MEMBER"))
+        {
+            var userId = UserManager.GetUserId(User);
+            var user = Context.Users.Find(userId);
+            var householdId = user.HouseholdId;
+            <!---------------------->
+            <!-- Left Side Navbar -->
+            <!---------------------->
+            <div id="left-sidebar" class="sidebar">
+                <div class="sidebar-scroll">
+                    <div class="user-account">
+                        <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
+                        <hr>
+                    </div>
+                    <!------------------->
+                    <!-- Overview Tab --->
+                    <!------------------->
+                    <div class="tab-content p-l-0 p-r-0">
+                        <div class="tab-pane animated fadeIn active" id="hr_menu">
+                            <nav class="sidebar-nav">
+                                <ul class="main-menu metismenu">
+                                    <li class="nav-link active"><span>Navigation</span></li>
+                                    <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-user"></i>Personal Acct.</a></li>
+                                    <li><a asp-controller="HouseholdBankAccounts" asp-action="Index" asp-route-id="@householdId"><i class="icon-globe"></i>Bank Accounts</a></li>
+                                    <li><a asp-controller="HouseholdCategories" asp-action="Index" asp-route-id="@householdId"><i class="icon-grid"></i>Categories</a></li>
+                                    <li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId"><i class="icon-list"></i>Items</a></li>
+                                    <li><a asp-controller="HouseholdNotifications" asp-action="Index" asp-route-id="@householdId"><i class="icon-pencil"></i>Notifications</a></li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
         <!------------------------------>
         <!-- Render Body R-tag--------->
         <!------------------------------>
-        <div class="container-fluid" style="margin-top: 90px; padding-right: 90px; padding-left: 300px">
+        <div class="container-fluid" style="margin-top: 100px; padding-right: 90px; padding-left: 300px">
             <main>
                 @RenderBody()
             </main>
@@ -97,7 +135,7 @@
     <!-- Footer -->
     <!------------>
     <div>
-        <footer class="border-top footer w-100 fixed-bottom text-center text-success">
+        <footer class="border-top footer w-100 fixed-bottom bg-white text-center text-success">
             <div>
                 &copy; 2020 ~ Money Tracker ~ Created by: O J OLMO
             </div>
@@ -106,14 +144,15 @@
     <!---------------->
     <!-- Javascript -->
     <!---------------->
-    <script src="~/js/libscripts.bundle.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    @*<script src="~/js/libscripts.bundle.js"></script>*@
     <script src="~/js/vendorscripts.bundle.js"></script>
-    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="~/js/toastr.js"></script>
-    <script src="~/js/chartist.bundle.js"></script>
     <script src="~/js/knob.bundle.js"></script>
+    <script src="~/js/chartist.bundle.js"></script>
     <script src="~/js/mainscripts.bundle.js"></script>
-    <script src="~/js/index.js"></script>
+
 
     <script>
         $(document).ready(function () {

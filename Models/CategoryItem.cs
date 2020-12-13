@@ -6,6 +6,7 @@ namespace FinancePortal.Models
 {
     public class CategoryItem
     {
+
         public int Id { get; set; }
 
         public int CategoryId { get; set; }
@@ -17,11 +18,11 @@ namespace FinancePortal.Models
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Description { get; set; }
 
-        [Column(TypeName = "decimal(6, 2)")]
-        public int TargetAmount { get; set; }   
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal TargetAmount { get; set; }   
 
-        [Column(TypeName = "decimal(6, 2)")]
-        public int ActualAmount { get; set; }   
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal ActualAmount { get; set; }   
 
         public HouseholdCategory HouseholdCategory { get; set; }
 
@@ -30,7 +31,7 @@ namespace FinancePortal.Models
         public CategoryItem()
         {
             Transactions = new HashSet<Transaction>();
-            
+            ActualAmount = 0;
         }
 
     }

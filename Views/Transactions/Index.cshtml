@@ -13,64 +13,71 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table m-b-0 table-hover">
-    <thead class="thead-green">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CategoryItemId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HouseholdBankAccountId)
-            </th>
-            <th>
-                User Name
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Memo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+<div>
+
+    <table class="table m-b-0 table-hover">
+        <thead class="thead-green">
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CategoryItemId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HouseholdBankAccountId)
-                </td>
-                <td>
-                    @context.Users.Find(item.FPUserId).FullName
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Memo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsDeleted)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategoryItemId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HouseholdBankAccountId)
+                </th>
+                <th>
+                    User Name
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Created)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Memo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsDeleted)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryItemId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HouseholdBankAccountId)
+                    </td>
+                    <td>
+                        @context.Users.Find(item.FPUserId).FullName
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Memo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsDeleted)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<a class="btn btn-primary" asp-controller="Households" asp-action="Dashboard">Back to Dashboard</a>
+
+

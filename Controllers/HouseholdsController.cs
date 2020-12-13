@@ -11,6 +11,7 @@ using FinancePortal.Enums;
 using HouseholdRole = FinancePortal.Enums.HouseholdRole;
 using Microsoft.Extensions.Logging;
 using FinancePortal.Areas.Identity.Pages.Account;
+using FinancePortal.Models.View_Models;
 
 namespace FinancePortal.Controllers
 {
@@ -60,7 +61,7 @@ namespace FinancePortal.Controllers
             var user = await _userManager.GetUserAsync(User);
             var memberCount = _context.Users.Where(u => u.HouseholdId == user.HouseholdId).Count();
 
-            if (User.IsInRole(nameof(HouseholdRole.HEAD)) && memberCount >1)
+            if (User.IsInRole(nameof(HouseholdRole.HEAD)) && memberCount > 1)
             {
                 //Send rule reminder
                 TempData["Message"] = "You cannot leave the Household until until all the members have left.";
@@ -81,7 +82,7 @@ namespace FinancePortal.Controllers
             await _signInManager.RefreshSignInAsync(user);
 
             //Step 6: Redirect to the Lobby
-            if(_context.Users.Where(u => u.HouseholdId == householdIdMemento).Count() == 0)
+            if (_context.Users.Where(u => u.HouseholdId == householdIdMemento).Count() == 0)
             {
                 var household = await _context.Household.FindAsync(householdIdMemento);
                 _context.Household.Remove(household);
@@ -108,13 +109,37 @@ namespace FinancePortal.Controllers
             }
 
             var household = await _context.Household
-                .FirstOrDefaultAsync(m => m.Id == id);
+            .Include(b => b.BankAccounts)
+            .Include(c => c.Categories)
+            .ThenInclude(c =>c.CategoryItems)
+            .Include(o => o.Occupants)
+            .Include(n => n.Notifications)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+            //Create a viewmodel that includes all the properties needed to display for the household.
+            //Household info, Bank account info, Category and Cat - items info, and transactions for each account
+
+            var vm = new HouseholdViewModel();
+
             if (household == null)
             {
                 return NotFound();
             }
+            else
+            {
+                vm.Household = household;
+            }
+            vm.HouseholdBankAccounts = household.BankAccounts.ToList();
+            vm.HouseholdNotifications = household.Notifications.ToList();
+            vm.HouseholdCategories = household.Categories.ToList();
+            vm.CategoryItems = household.CategoryItems.ToList();
+            vm.HouseholdCategory = new HouseholdCategory
+            {
+                HouseholdId = household.Id
+            };
 
-            return View(household);
+            return View(vm);
+
         }
 
         // GET: Households/Create
@@ -145,7 +170,7 @@ namespace FinancePortal.Controllers
 
                 await _signInManager.RefreshSignInAsync(currentUser);
 
-                return RedirectToAction("Dashboard", "Households", new { id = household.Id});
+                return RedirectToAction("Dashboard", "Households", new { id = household.Id });
             }
             return View(household);
         }

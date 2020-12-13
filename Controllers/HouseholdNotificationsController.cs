@@ -4,22 +4,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FinancePortal.Data;
 using FinancePortal.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinancePortal.Controllers
 {
     public class HouseholdNotificationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<FPUser> _userManager;
 
-        public HouseholdNotificationsController(ApplicationDbContext context)
+        public HouseholdNotificationsController(ApplicationDbContext context, UserManager<FPUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: HouseholdNotifications
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.HouseholdNotification.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            var user = _context.Users.Find(userId);
+
+            return View(await _context.HouseholdNotification.Where(u => u.HouseholdId == user.HouseholdId).ToListAsync());
         }
 
         // GET: HouseholdNotifications/Details/5

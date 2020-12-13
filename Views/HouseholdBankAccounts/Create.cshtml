@@ -10,34 +10,36 @@
 
 <h4>New Bank Account</h4>
 <hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="card">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="HouseholdId" />
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountType" class="control-label"></label>
-                <select asp-for="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
-                <span asp-validation-for="AccountType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartingBalance" class="control-label"></label>
-                <input asp-for="StartingBalance" class="form-control" />
-                <span asp-validation-for="StartingBalance" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AccountType" class="control-label"></label>
+                    <select asp-for="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
+                    <span asp-validation-for="AccountType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartingBalance" class="control-label"></label>
+                    <input asp-for="StartingBalance" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                    <span asp-validation-for="StartingBalance" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

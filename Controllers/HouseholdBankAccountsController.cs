@@ -21,9 +21,12 @@ namespace FinancePortal.Controllers
         }
 
         // GET: HouseholdBankAccounts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.HouseholdBankAccount.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            var user = _context.Users.Find(userId);
+
+            return View(await _context.HouseholdBankAccount.Where(u => u.HouseholdId == user.HouseholdId).ToListAsync());
         }
 
         // GET: HouseholdBankAccounts/Details/5
