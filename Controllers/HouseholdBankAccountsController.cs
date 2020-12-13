@@ -74,7 +74,7 @@ namespace FinancePortal.Controllers
                 return RedirectToAction("Dashboard", "Households");
             }
             ViewData["HouseholdId"] = new SelectList(_context.Household, "Id", "Id", householdBankAccount.HouseholdId);
-            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Name", householdBankAccount.FPUserId);
+            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Name", householdBankAccount.Name);  //Need the User Name
 
             return View(householdBankAccount);
         }

@@ -110,7 +110,7 @@
                                     <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-user"></i>Personal Acct.</a></li>
                                     <li><a asp-controller="HouseholdBankAccounts" asp-action="Index" asp-route-id="@householdId"><i class="icon-globe"></i>Bank Accounts</a></li>
                                     <li><a asp-controller="HouseholdCategories" asp-action="Index" asp-route-id="@householdId"><i class="icon-grid"></i>Categories</a></li>
-                                    <li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId"><i class="icon-list"></i>Items</a></li>
+                                    <li><a asp-controller="CategoryItems" asp-action="Index" asp-route-id="@householdId"><i class="icon-list"></i>Items</a></li>
                                     <li><a asp-controller="HouseholdNotifications" asp-action="Index" asp-route-id="@householdId"><i class="icon-pencil"></i>Notifications</a></li>
 
                                 </ul>
@@ -124,7 +124,7 @@
         <!------------------------------>
         <!-- Render Body R-tag--------->
         <!------------------------------>
-        <div class="container-fluid" style="margin-top: 100px; padding-right: 90px; padding-left: 300px">
+        <div class="container-fluid" style="margin-top: 100px; padding-right: 40px; padding-left: 270px">
             <main>
                 @RenderBody()
             </main>
@@ -146,7 +146,6 @@
     <!---------------->
     <script src="~/js/jquery-3.3.1.min.js"></script>
     <script src="~/js/jquery.dataTables.min.js"></script>
-    @*<script src="~/js/libscripts.bundle.js"></script>*@
     <script src="~/js/vendorscripts.bundle.js"></script>
     <script src="~/js/toastr.js"></script>
     <script src="~/js/knob.bundle.js"></script>

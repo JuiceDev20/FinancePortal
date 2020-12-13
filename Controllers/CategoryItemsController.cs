@@ -66,6 +66,8 @@ namespace FinancePortal.Controllers
         {
             if (ModelState.IsValid)
             {
+                var category = _context.HouseholdCategory.Find(categoryItem.CategoryId);
+                category.TargetAmount += categoryItem.TargetAmount;
                 _context.Add(categoryItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Dashboard", "Households");

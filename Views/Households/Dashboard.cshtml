@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using FinancePortal.Services
 @using FinancePortal.Enums
+
 @model FinancePortal.Models.Household
 
 @inject IImageService ImageService
@@ -14,118 +15,341 @@
 <h1>@ViewData["Title"]</h1>
 
 
-
- 
-    <!------------------------------>
-    <!-- Button to Open the Modal -->
-    <!------------------------------>
-    <div>
-        @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
-        {
-            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
-                Create Invititation
-            </button>
-        }
-        <!--------------->
-        <!-- The Modal -->
-        <!--------------->
-        <div class="modal" id="myModal">
-            <div class="modal-dialog-centered modal-dialog modal-xl">
-                <div class="modal-content">
-                    <!------------------>
-                    <!-- Modal Header -->
-                    <!------------------>
-                    <div class="modal-header justify-content-center bg-success">
-                        <h4 class="modal-title text-white">Invitation to Join</h4>
-                    </div>
-                    <!---------------->
-                    <!-- Modal body -->
-                    <!---------------->
-                    <div class="modal-body bg-light justify-content-center">
-                        <form id="frmInvite" asp-controller="HouseholdInvitations" asp-action="Create">
-                            @Html.AntiForgeryToken()
-                            @*@Html.Hidden("HouseholdId", Model.Id)*@
-                            <input type="hidden" name="HouseholdId" value="@Model.Id" />
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="input-group mb-6">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">First Name</span>
-                                            </div>
-                                            <input name="FirstName" id="FirstName" type="text" class="form-control" />
+<!------------------------------>
+<!-- Button to Open the Modal -->
+<!------------------------------>
+<div>
+    @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
+    {
+        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+            Create Invititation
+        </button>
+    }
+    <!--------------->
+    <!-- The Modal -->
+    <!--------------->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog-centered modal-dialog modal-xl">
+            <div class="modal-content">
+                <!------------------>
+                <!-- Modal Header -->
+                <!------------------>
+                <div class="modal-header justify-content-center bg-success">
+                    <h4 class="modal-title text-white">Invitation to Join</h4>
+                </div>
+                <!---------------->
+                <!-- Modal body -->
+                <!---------------->
+                <div class="modal-body bg-light justify-content-center">
+                    <form id="frmInvite" asp-controller="HouseholdInvitations" asp-action="Create">
+                        @Html.AntiForgeryToken()
+                        @*@Html.Hidden("HouseholdId", Model.Id)*@
+                        <input type="hidden" name="HouseholdId" value="@Model.Id" />
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-group mb-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">First Name</span>
                                         </div>
+                                        <input name="FirstName" id="FirstName" type="text" class="form-control" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="input-group mb-6">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Last Name</span>
-                                    </div>
-                                    <input name="LastName" id="LastName" type="text" class="form-control" />
+                        </div>
+                        <div class="col">
+                            <div class="input-group mb-6">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Last Name</span>
                                 </div>
+                                <input name="LastName" id="LastName" type="text" class="form-control" />
                             </div>
-                            <br />
-                            <div class="col">
-                                <div class="input-group mb-6">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Email</span>
-                                    </div>
-                                    <input name="EmailTo" type="email" class="form-control" />
+                        </div>
+                        <br />
+                        <div class="col">
+                            <div class="input-group mb-6">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Email</span>
                                 </div>
+                                <input name="EmailTo" type="email" class="form-control" />
                             </div>
-                            <br />
-                            <div class="col">
-                                <div class="input-group mb-6">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Subject</span>
-                                    </div>
-                                    <input name="Subject" id="Subject" type="text" class="form-control" />
+                        </div>
+                        <br />
+                        <div class="col">
+                            <div class="input-group mb-6">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Subject</span>
                                 </div>
+                                <input name="Subject" id="Subject" type="text" class="form-control" />
                             </div>
-                            <br />
-                            <div class="col">
-                                <div class="input-group mb-6">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Message</span>
-                                    </div>
-                                    <textarea name="Message" type="text" class="form-control"></textarea>
+                        </div>
+                        <br />
+                        <div class="col">
+                            <div class="input-group mb-6">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Message</span>
                                 </div>
+                                <textarea name="Message" type="text" class="form-control"></textarea>
                             </div>
-                            <br />
-                            <div class="col">
-                                <div class="input-group mb-6">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Expires</span>
-                                    </div>
-                                    <input name="Expires" type="text" class="form-control" />
+                        </div>
+                        <br />
+                        <div class="col">
+                            <div class="input-group mb-6">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Expires</span>
                                 </div>
+                                <input name="Expires" type="text" class="form-control" />
                             </div>
-                            <br />
-                            <button id="btnSend" type="submit" class="btn btn-success">Send</button>
-                        </form>
-                    </div>
-                    <!------------------>
-                    <!-- Modal footer -->
-                    <!------------------>
-                    <div class="modal-footer bg-light">
-                        <button id="btnReset" type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
-                    </div>
+                        </div>
+                        <br />
+                        <button id="btnSend" type="submit" class="btn btn-success">Send</button>
+                    </form>
+                </div>
+                <!------------------>
+                <!-- Modal footer -->
+                <!------------------>
+                <div class="modal-footer bg-light">
+                    <button id="btnReset" type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!----------------------------->
+<!-- Dashboard Layout Strats -->
+<!----------------------------->
+<br />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <h6 class="card-header">
+                    ??
+                </h6>
+                <div class="card-body bg-light">
+                    <p class="card-text">
+                        Graph
+                    </p>
+                </div>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card text-white">
+                <h6 class="card-header bg-info">
+                    Bank Accounts
+                </h6>
+                <div class="card-body">
+                    <table class="table table-hover table-sm table-bordered">
+                        <thead class="thead-success">
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Balance
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var account in Model.BankAccounts)
+                            {
+                                <tr>
+                                    <td>
+                                        @account.Name
+                                    </td>
+                                    <td>
+                                        @account.AccountType
+                                    </td>
+                                    <td>
+                                        @account.CurrentBalance
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+
+                                            <a class="btn btn-info" type="button" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
+                                            <a class="btn btn-warning" type="button" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
+                                            <a class="btn btn-danger" type="button" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------->
+<!-- Second Row -->
+<!---------------->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card text-white">
+                <h6 class="card-header bg-info">Catgories </h6>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead class="thead-success">
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var category in Model.Categories)
+                            {
+                                <tr>
+                                    <td>
+                                        @category.Name
+                                    </td>
+                                    <td>
+                                        @category.Description
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+
+                                            <a class="btn btn-info" type="button" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
+                                            <a class="btn btn-warning" type="button" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@category.Id">Details</a>
+                                            <a class="btn btn-danger" type="button" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white">
+                <h6 class="card-header bg-info">
+                    ??
+                </h6>
+                <div class="card-body bg-light">
+                    <p class="card-text">
+                        Graph
+                    </p>
+                </div>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------->
+<!-- Third Row -->
+<!--------------->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="card text-white">
+            <h6 class="card-header bg-info">
+                Category Items
+            </h6>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead class="thead-success">
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Target Amount
+                                </th>
+                                <th>
+                                    Actual Amount
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var categoryItem in Model.CategoryItems)
+                            {
+                                <tr>
+                                    <td>
+                                        @categoryItem.Name
+                                    </td>
+                                    <td>
+                                        @categoryItem.Description
+                                    </td>
+                                    <td>
+                                        @categoryItem.TargetAmount
+                                    </td>
+                                    <td>
+                                        @categoryItem.ActualAmount
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+
+                                            <a class="btn btn-info" type="button" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
+                                            <a class="btn btn-warning" type="button" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
+                                            <a class="btn btn-danger" type="button" asp-controller="CategortItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!--------------------------->
+    <!-- Dashboard Layout Ends -->
+    <!--------------------------->
 
 
+    @*<script src="~/js/jquery-3.3.1.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>*@
 
-@section Scripts {
-    <script>
-        $("btnSend").on("click", function () {
-            $("frmInvite").submit();
-            $("invite").modal('hide');
-            $("#btnReset").click();
-        });
-    </script>
+    @section Scripts {
+        <script>
+            $("btnSend").on("click", function () {
+                $("frmInvite").submit();
+                $("invite").modal('hide');
+                $("#btnReset").click();
+            });
+        </script>
 
-}
+    }

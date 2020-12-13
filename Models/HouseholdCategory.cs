@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinancePortal.Models
 {
@@ -17,6 +18,13 @@ namespace FinancePortal.Models
         public string Description { get; set; }
 
         public Household Household { get; set; }
+
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal TargetAmount { get; set; }
+
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal ActualAmount { get; set; }
+
 
         public ICollection<CategoryItem> CategoryItems { get; set; }
         public HouseholdCategory()
