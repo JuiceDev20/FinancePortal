@@ -29,14 +29,11 @@ namespace FinancePortal.Migrations
                     b.Property<decimal>("ActualAmount")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Description")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int?>("HouseholdCategoryId")
+                    b.Property<int>("HouseholdCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("HouseholdId")
@@ -525,7 +522,9 @@ namespace FinancePortal.Migrations
                 {
                     b.HasOne("FinancePortal.Models.HouseholdCategory", "HouseholdCategory")
                         .WithMany("CategoryItems")
-                        .HasForeignKey("HouseholdCategoryId");
+                        .HasForeignKey("HouseholdCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FinancePortal.Models.Household", null)
                         .WithMany("CategoryItems")

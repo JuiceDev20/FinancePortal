@@ -62,11 +62,11 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryId,Name,Description,TargetAmount")] CategoryItem categoryItem)
+        public async Task<IActionResult> Create([Bind("HouseholdCategoryId,Name,Description,TargetAmount")] CategoryItem categoryItem)
         {
             if (ModelState.IsValid)
             {
-                var category = _context.HouseholdCategory.Find(categoryItem.CategoryId);
+                var category = _context.HouseholdCategory.Find(categoryItem.HouseholdCategoryId);
                 category.TargetAmount += categoryItem.TargetAmount;
                 _context.Add(categoryItem);
                 await _context.SaveChangesAsync();

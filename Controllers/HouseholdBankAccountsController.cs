@@ -133,6 +133,7 @@ namespace FinancePortal.Controllers
             return View(model);
         }
 
+
         // GET: HouseholdBankAccounts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

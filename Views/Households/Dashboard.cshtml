@@ -2,11 +2,11 @@
 @using FinancePortal.Services
 @using FinancePortal.Enums
 
-@model FinancePortal.Models.Household
 
 @inject IImageService ImageService
 @inject UserManager<FPUser> userManager
 
+@model FinancePortal.Models.View_Models.HouseholdViewModel
 
 @{
     ViewData["Title"] = "Welcome to Your Dashboard";
@@ -15,16 +15,375 @@
 <h1>@ViewData["Title"]</h1>
 
 
-<!------------------------------>
-<!-- Button to Open the Modal -->
-<!------------------------------>
+@if (TempData["HEADLeave"] != null)
+{
+    <h1 class="text-danger">@TempData["HEADLeave"]</h1>
+}
+
+
+<!----------------------------->
+<!-- Dashboard Layout Strats -->
+<!----------------------------->
+<!--------------------------->
+<!-- Top Row Modal Buttons -->
+<!--------------------------->
+
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-6">
+            <div class="card top_counter">
+                <div class="body">
+                    <div class="icon"><i class="fa fa-users"></i> </div>
+                    <div class="content">
+                        <div class="text">Invitations</div>
+                        @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
+                        {
+                            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+                                Create
+                            </button>
+                        }
+
+                    </div>
+                    <hr>
+                    <div class="icon"><i class="fa fa-bank"></i> </div>
+                    <div class="content">
+                        <div class="text">Transactions</div>
+                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal2">
+                            Create
+                        </button>
+
+                    </div>
+                </div>
+                <div class="card top_counter">
+                    <div class="body">
+                        <div class="icon"><i class="fa fa-anchor"></i> </div>
+                        <div class="content">
+                            <div class="text">??</div>
+                            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal3">
+                                Create
+                            </button>
+                        </div>
+                        <hr>
+                        <div class="icon"><i class="fa fa-user"></i> </div>
+                        <div class="content">
+                            <div class="text">Leave Household</div>
+                            <form asp-controller="Households" asp-action="LeaveHousehold">
+                                <input type="submit" class="btn btn-outline-danger" value="Get Out!" />
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 col-md-8">
+            <div id="card-21523">
+                <div class="card text-white">
+                    <div class="card-header bg-info">
+                        <a class="card-link collapsed text-white" data-toggle="collapse" data-parent="#card-21523" href="#card-element-86637">Bank Accounts</a>
+                    </div>
+                    <div id="card-element-86637" class="collapse">
+                        <div class="card-body">
+                            <div class="card text-white">
+                                <h6 class="card-header bg-info">
+                                    Bank Accounts
+                                </h6>
+                                <div class="card-body">
+                                    <table class="table table-hover table-sm table-bordered">
+                                        <thead class="thead-success">
+                                            <tr>
+                                                <th>
+                                                    Name
+                                                </th>
+                                                <th>
+                                                    Type
+                                                </th>
+                                                <th>
+                                                    Balance
+                                                </th>
+                                                <th>
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var account in Model.Household.BankAccounts)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @account.Name
+                                                    </td>
+                                                    <td>
+                                                        @account.AccountType
+                                                    </td>
+                                                    <td>
+                                                        @account.CurrentBalance
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
+
+                                                            <a class="btn btn-info" type="button" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
+                                                            <a class="btn btn-warning" type="button" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
+                                                            <a class="btn btn-danger" type="button" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
+
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-21523" href="#card-element-209962">Members</a>
+                    </div>
+                    <div id="card-element-209962" class="collapse">
+                        <div class="card-body">
+                            <div class="ccol-lg-6 col-md-4">
+                                <div class="card text-white">
+                                    <h6 class="card-header bg-info">
+                                        ??
+                                    </h6>
+                                    <div class="card-body bg-light">
+                                        <p class="card-text">
+                                            Graph
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---------------->
+<!-- Second Row -->
+<!---------------->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="card-290667">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <a class="card-link text-white" data-toggle="collapse" data-parent="#card-290667" href="#card-element-805787">Transactions</a>
+                    </div>
+                    <div id="card-element-805787" class="collapse show">
+                        <div class="card-body">
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-290667" href="#card-element-100625">Graph</a>
+                    </div>
+                    <div id="card-element-100625" class="collapse">
+                        <div class="card-body">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="card-691557">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <a class="card-link text-white" data-toggle="collapse" data-parent="#card-691557" href="#card-element-357510">Categories</a>
+                    </div>
+                    <div id="card-element-357510" class="collapse show">
+                        <div class="card-body">
+                            <div id="card-element-100625" class="collapse">
+                                <div class="card-body">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="card text-white">
+                                            <h6 class="card-header bg-info">Catgories </h6>
+                                            <div class="card-body">
+                                                <table class="table table-bordered table-hover table-sm">
+                                                    <thead class="thead-success">
+                                                        <tr>
+                                                            <th>
+                                                                Name
+                                                            </th>
+                                                            <th>
+                                                                Description
+                                                            </th>
+                                                            <th>
+                                                                Action
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var category in Model.Household.Categories)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @category.Name
+                                                                </td>
+                                                                <td>
+                                                                    @category.Description
+                                                                </td>
+                                                                <td>
+                                                                    <div class="btn-group btn-group-sm">
+
+                                                                        <a class="btn btn-info" type="button" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
+                                                                        <a class="btn btn-warning" type="button" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@category.Id">Details</a>
+                                                                        <a class="btn btn-danger" type="button" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+
+                                                                    </div>
+                                                                </td>
+
+                                                            </tr>
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-691557" href="#card-element-994154">Chart</a>
+                    </div>
+                    <div id="card-element-994154" class="collapse">
+                        <div class="card-body">
+
+                            Bar Chart
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--------------->
+<!-- Third Row -->
+<!--------------->
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="card-517643">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <a class="card-link collapsed text-white" data-toggle="collapse" data-parent="#card-517643" href="#card-element-984944">Category Items</a>
+                    </div>
+                    <div id="card-element-984944" class="collapse">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="card text-white">
+                                    <h6 class="card-header bg-info">
+                                        Category Items
+                                    </h6>
+                                    <div class="card-body">
+                                        <div class="col-md-12">
+                                            <table class="table table-bordered table-hover table-sm">
+                                                <thead class="thead-success">
+                                                    <tr>
+                                                        <th>
+                                                            Name
+                                                        </th>
+                                                        <th>
+                                                            Description
+                                                        </th>
+                                                        <th>
+                                                            Target Amount
+                                                        </th>
+                                                        <th>
+                                                            Actual Amount
+                                                        </th>
+                                                        <th>
+                                                            Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var categoryItem in Model.CategoryItems)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @categoryItem.Name
+                                                            </td>
+                                                            <td>
+                                                                @categoryItem.Description
+                                                            </td>
+                                                            <td>
+                                                                @categoryItem.TargetAmount
+                                                            </td>
+                                                            <td>
+                                                                @categoryItem.ActualAmount
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn-group btn-group-sm">
+
+                                                                    <a class="btn btn-info" type="button" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
+                                                                    <a class="btn btn-warning" type="button" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
+                                                                    <a class="btn btn-danger" type="button" asp-controller="CategortItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
+
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <a class="card-link collapsed text-white" data-toggle="collapse" data-parent="#card-517643" href="#card-element-58323">Graph</a>
+                    </div>
+                    <div id="card-element-58323" class="collapse">
+                        <div class="card-body">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--------------------------->
+<!-- Dashboard Layout Ends -->
+<!--------------------------->
+
 <div>
-    @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
-    {
-        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
-            Create Invititation
-        </button>
-    }
     <!--------------->
     <!-- The Modal -->
     <!--------------->
@@ -44,7 +403,7 @@
                     <form id="frmInvite" asp-controller="HouseholdInvitations" asp-action="Create">
                         @Html.AntiForgeryToken()
                         @*@Html.Hidden("HouseholdId", Model.Id)*@
-                        <input type="hidden" name="HouseholdId" value="@Model.Id" />
+                        <input type="hidden" name="HouseholdId" value="@Model.Household.Id" />
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col">
@@ -114,242 +473,33 @@
             </div>
         </div>
     </div>
+
+    <!--------------->
+    <!-- Modal # 2 -->
+    <!--------------->
+
 </div>
 
-<!----------------------------->
-<!-- Dashboard Layout Strats -->
-<!----------------------------->
-<br />
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-white bg-info">
-                <h6 class="card-header">
-                    ??
-                </h6>
-                <div class="card-body bg-light">
-                    <p class="card-text">
-                        Graph
-                    </p>
-                </div>
-                <div class="card-footer">
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="card text-white">
-                <h6 class="card-header bg-info">
-                    Bank Accounts
-                </h6>
-                <div class="card-body">
-                    <table class="table table-hover table-sm table-bordered">
-                        <thead class="thead-success">
-                            <tr>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Type
-                                </th>
-                                <th>
-                                    Balance
-                                </th>
-                                <th>
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var account in Model.BankAccounts)
-                            {
-                                <tr>
-                                    <td>
-                                        @account.Name
-                                    </td>
-                                    <td>
-                                        @account.AccountType
-                                    </td>
-                                    <td>
-                                        @account.CurrentBalance
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-
-                                            <a class="btn btn-info" type="button" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
-                                            <a class="btn btn-warning" type="button" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
-                                            <a class="btn btn-danger" type="button" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
-
-                                        </div>
-
-                                    </td>
-                                </tr>
-                            }
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!---------------->
-<!-- Second Row -->
-<!---------------->
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card text-white">
-                <h6 class="card-header bg-info">Catgories </h6>
-                <div class="card-body">
-                    <table class="table table-bordered table-hover table-sm">
-                        <thead class="thead-success">
-                            <tr>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Description
-                                </th>
-                                <th>
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach (var category in Model.Categories)
-                            {
-                                <tr>
-                                    <td>
-                                        @category.Name
-                                    </td>
-                                    <td>
-                                        @category.Description
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-
-                                            <a class="btn btn-info" type="button" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
-                                            <a class="btn btn-warning" type="button" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@category.Id">Details</a>
-                                            <a class="btn btn-danger" type="button" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
-
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card text-white">
-                <h6 class="card-header bg-info">
-                    ??
-                </h6>
-                <div class="card-body bg-light">
-                    <p class="card-text">
-                        Graph
-                    </p>
-                </div>
-                <div class="card-footer">
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--------------->
-<!-- Third Row -->
-<!--------------->
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="card text-white">
-            <h6 class="card-header bg-info">
-                Category Items
-            </h6>
-            <div class="card-body">
-                <div class="col-md-12">
-                    <table class="table table-bordered table-hover table-sm">
-                        <thead class="thead-success">
-                            <tr>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Description
-                                </th>
-                                <th>
-                                    Target Amount
-                                </th>
-                                <th>
-                                    Actual Amount
-                                </th>
-                                <th>
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var categoryItem in Model.CategoryItems)
-                            {
-                                <tr>
-                                    <td>
-                                        @categoryItem.Name
-                                    </td>
-                                    <td>
-                                        @categoryItem.Description
-                                    </td>
-                                    <td>
-                                        @categoryItem.TargetAmount
-                                    </td>
-                                    <td>
-                                        @categoryItem.ActualAmount
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-
-                                            <a class="btn btn-info" type="button" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
-                                            <a class="btn btn-warning" type="button" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
-                                            <a class="btn btn-danger" type="button" asp-controller="CategortItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
-
-                                        </div>
-
-                                    </td>
-                                </tr>
-
-                            }
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    <!--------------------------->
-    <!-- Dashboard Layout Ends -->
-    <!--------------------------->
 
 
-    @*<script src="~/js/jquery-3.3.1.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>*@
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
 
-    @section Scripts {
-        <script>
-            $("btnSend").on("click", function () {
-                $("frmInvite").submit();
-                $("invite").modal('hide');
-                $("#btnReset").click();
-            });
-        </script>
+@section Scripts {
+    <script>
+        $("btnSend").on("click", function () {
+            $("frmInvite").submit();
+            $("invite").modal('hide');
+            $("#btnReset").click();
+        });
+    </script>
 
-    }
+    <script>
+        $("btnSend").on("click", function () {
+            $("frmTransaction").submit();
+            $("transaction").modal('hide');
+            $("#btnReset").click();
+        });
+    </script>
+
+}

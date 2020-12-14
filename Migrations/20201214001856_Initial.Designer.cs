@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinancePortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201210235702_Editedmodels")]
-    partial class Editedmodels
+    [Migration("20201214001856_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,16 +29,13 @@ namespace FinancePortal.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ActualAmount")
-                        .HasColumnType("decimal(6, 2)");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<string>("Description")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int?>("HouseholdCategoryId")
+                    b.Property<int>("HouseholdCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("HouseholdId")
@@ -49,7 +46,7 @@ namespace FinancePortal.Migrations
                         .HasMaxLength(30);
 
                     b.Property<decimal>("TargetAmount")
-                        .HasColumnType("decimal(6, 2)");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.HasKey("Id");
 
@@ -244,6 +241,9 @@ namespace FinancePortal.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<decimal>("ActualAmount")
+                        .HasColumnType("decimal(10, 2)");
+
                     b.Property<string>("Description")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
@@ -254,6 +254,9 @@ namespace FinancePortal.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("character varying(35)")
                         .HasMaxLength(35);
+
+                    b.Property<decimal>("TargetAmount")
+                        .HasColumnType("decimal(10, 2)");
 
                     b.HasKey("Id");
 
@@ -521,7 +524,9 @@ namespace FinancePortal.Migrations
                 {
                     b.HasOne("FinancePortal.Models.HouseholdCategory", "HouseholdCategory")
                         .WithMany("CategoryItems")
-                        .HasForeignKey("HouseholdCategoryId");
+                        .HasForeignKey("HouseholdCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FinancePortal.Models.Household", null)
                         .WithMany("CategoryItems")

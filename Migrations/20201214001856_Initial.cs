@@ -125,7 +125,9 @@ namespace FinancePortal.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     HouseholdId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 35, nullable: true),
-                    Description = table.Column<string>(maxLength: 100, nullable: true)
+                    Description = table.Column<string>(maxLength: 100, nullable: true),
+                    TargetAmount = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
+                    ActualAmount = table.Column<decimal>(type: "decimal(10, 2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,7 +286,7 @@ namespace FinancePortal.Migrations
                     HouseholdId = table.Column<int>(nullable: false),
                     FPUserId = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 35, nullable: false),
-                    AccountType = table.Column<int>(maxLength: 35, nullable: false),
+                    AccountType = table.Column<int>(nullable: false),
                     StartingBalance = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
                     CurrentBalance = table.Column<decimal>(type: "decimal(10, 2)", nullable: false)
                 },
@@ -311,12 +313,11 @@ namespace FinancePortal.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CategoryId = table.Column<int>(nullable: false),
+                    HouseholdCategoryId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 30, nullable: true),
                     Description = table.Column<string>(maxLength: 100, nullable: true),
-                    TargetAmount = table.Column<decimal>(type: "decimal(6, 2)", nullable: false),
-                    ActualAmount = table.Column<decimal>(type: "decimal(6, 2)", nullable: false),
-                    HouseholdCategoryId = table.Column<int>(nullable: true),
+                    TargetAmount = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
+                    ActualAmount = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
                     HouseholdId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -327,7 +328,7 @@ namespace FinancePortal.Migrations
                         column: x => x.HouseholdCategoryId,
                         principalTable: "HouseholdCategory",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CategoryItem_Household_HouseholdId",
                         column: x => x.HouseholdId,
@@ -342,15 +343,14 @@ namespace FinancePortal.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CategryItemId = table.Column<int>(nullable: true),
+                    CategoryItemId = table.Column<int>(nullable: true),
                     HouseholdBankAccountId = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     FPUserId = table.Column<string>(nullable: true),
                     Created = table.Column<DateTimeOffset>(nullable: false),
                     Memo = table.Column<string>(maxLength: 100, nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(6, 2)", nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    CategoryItemId = table.Column<int>(nullable: true)
+                    Amount = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

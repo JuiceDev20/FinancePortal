@@ -12,6 +12,7 @@ using HouseholdRole = FinancePortal.Enums.HouseholdRole;
 using Microsoft.Extensions.Logging;
 using FinancePortal.Areas.Identity.Pages.Account;
 using FinancePortal.Models.View_Models;
+using System.Collections.Generic;
 
 namespace FinancePortal.Controllers
 {
@@ -33,24 +34,37 @@ namespace FinancePortal.Controllers
         [Authorize(Roles = "HEAD, MEMBER")]
         public async Task<IActionResult> Dashboard()
         {
+            var householdVm = new HouseholdViewModel();
             var user = await _userManager.GetUserAsync(User);
             var houseId = user.HouseholdId;
-            var hhId = (await _userManager.GetUserAsync(User)).HouseholdId;
 
-            var household = await _context.Household
+            householdVm.Household = await _context.Household
                 .Include(h => h.Occupants)
                 .ThenInclude(u => u.Transactions)
                 .Include(h => h.Occupants)
                 .Include(u => u.Categories)
-                .ThenInclude(h => h.CategoryItems)
+                .ThenInclude(c => c.CategoryItems)
                 .Include(h => h.Occupants)
                 .ThenInclude(u => u.HouseholdBankAccounts)
-                .FirstOrDefaultAsync(m => m.Id == hhId);
-            if (household == null)
+                .FirstOrDefaultAsync(m => m.Id == houseId);
+            if (householdVm.Household == null)
             {
                 return NotFound();
+
             }
-            return View(household);
+
+            var catItems = new List<CategoryItem>();
+
+            householdVm.HouseholdCategories = _context.HouseholdCategory.Where(c => c.HouseholdId == houseId).ToList();
+            foreach (var category in householdVm.HouseholdCategories)
+            {
+                foreach (var categoryItem in category.CategoryItems.ToList())
+                {
+                    catItems.Add(categoryItem);
+                }
+            }
+            householdVm.CategoryItems = catItems;
+            return View(householdVm);
         }
 
         [Authorize(Roles = "HEAD, MEMBER")]
@@ -225,6 +239,32 @@ namespace FinancePortal.Controllers
             }
             return View(household);
         }
+
+        //POST: HouseholdBankAccount/LeaveHH/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LeaveHousehold()
+        {
+
+            var user = await _userManager.GetUserAsync(User);
+            var household = await _context.Household
+                .Include(hh => hh.Occupants)
+                .FirstOrDefaultAsync(hh => hh.Id == user.HouseholdId);
+
+            if (household.Occupants.Count() > 1 && User.IsInRole("HEAD")) 
+            {
+                TempData["HEADLeave"] = "You cannot leave the household unless you are the last person."; 
+                return RedirectToAction("Details", "Households", new { id = household.Id });
+            }
+
+            user.HouseholdId = null;
+            await _context.SaveChangesAsync();
+
+            return View();
+
+        }
+
+
 
         // GET: Households/Delete/5
         public async Task<IActionResult> Delete(int? id)
