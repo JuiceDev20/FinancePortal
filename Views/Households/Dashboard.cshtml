@@ -15,9 +15,9 @@
 <h1>@ViewData["Title"]</h1>
 
 
-@if (TempData["HEADLeave"] != null)
+@if (TempData["Message"] != null)
 {
-    <h1 class="text-danger">@TempData["HEADLeave"]</h1>
+    <h1 class="text-danger">@TempData["Message"]</h1>
 }
 
 
@@ -47,9 +47,9 @@
                     <hr>
                     <div class="icon"><i class="fa fa-bank"></i> </div>
                     <div class="content">
-                        <div class="text">Transactions</div>
+                        <div class="text">Balance</div>
                         <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal2">
-                            Create
+                            Find
                         </button>
 
                     </div>
@@ -58,7 +58,7 @@
                     <div class="body">
                         <div class="icon"><i class="fa fa-anchor"></i> </div>
                         <div class="content">
-                            <div class="text">??</div>
+                            <div class="text">Open</div>
                             <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal3">
                                 Create
                             </button>
@@ -67,7 +67,7 @@
                         <div class="icon"><i class="fa fa-user"></i> </div>
                         <div class="content">
                             <div class="text">Leave Household</div>
-                            <form asp-controller="Households" asp-action="LeaveHousehold">
+                            <form asp-controller="Households" asp-action="Leave">
                                 <input type="submit" class="btn btn-outline-danger" value="Get Out!" />
                             </form>
 
@@ -123,7 +123,7 @@
                                                     <td>
                                                         <div class="btn-group btn-group-sm">
 
-                                                            <a class="btn btn-info" type="button" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
+                                                            <a class="btn btn-info" type="button" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Name">Edit</a>
                                                             <a class="btn btn-warning" type="button" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
                                                             <a class="btn btn-danger" type="button" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
 
@@ -142,23 +142,66 @@
                 </div>
                 <div class="card">
                     <div class="card-header bg-info">
-                        <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-21523" href="#card-element-209962">Members</a>
+                        <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-21523" href="#card-element-209962">Category Items</a>
                     </div>
+
                     <div id="card-element-209962" class="collapse">
                         <div class="card-body">
-                            <div class="ccol-lg-6 col-md-4">
+                            <div class="col-lg-9 col-md-8">
                                 <div class="card text-white">
-                                    <h6 class="card-header bg-info">
-                                        ??
-                                    </h6>
-                                    <div class="card-body bg-light">
-                                        <p class="card-text">
-                                            Graph
-                                        </p>
-                                    </div>
-                                    <div class="card-footer">
+                                    <table class="table table-bordered table-hover table-sm">
+                                        <thead class="thead-success">
+                                            <tr>
+                                                <th>
+                                                    Name
+                                                </th>
+                                                <th>
+                                                    Description
+                                                </th>
+                                                <th>
+                                                    Target Amount
+                                                </th>
+                                                <th>
+                                                    Actual Amount
+                                                </th>
+                                                <th>
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var categoryItem in Model.CategoryItems)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @categoryItem.Name
+                                                    </td>
+                                                    <td>
+                                                        @categoryItem.Description
+                                                    </td>
+                                                    <td>
+                                                        @categoryItem.TargetAmount
+                                                    </td>
+                                                    <td>
+                                                        @categoryItem.ActualAmount
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
 
-                                    </div>
+                                                            <a class="btn btn-info" type="button" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Name">Edit</a>
+                                                            <a class="btn btn-warning" type="button" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
+                                                            <a class="btn btn-danger" type="button" asp-controller="CategortItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
+
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+
+                                            }
+
+                                        </tbody>
+                                    </table>
+
                                 </div>
                             </div>
                         </div>
@@ -183,9 +226,40 @@
                     </div>
                     <div id="card-element-805787" class="collapse show">
                         <div class="card-body">
+                            <div>
+                                <table class="table m-b-0 table-hover">
+                                    <thead class="thead-success">
+                                        <tr>
+                                            <th>Memo</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var transaction in Model.Transactions)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @transaction.Memo
+                                                </td>
+                                                <td>
+                                                    @transaction.Amount
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
 
+                                                        <a class="btn btn-info" type="button" asp-controller="Transactions" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
+                                                        <a class="btn btn-warning" type="button" asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Id">Details</a>
+                                                        <a class="btn btn-danger" type="button" asp-controller="Transactions" asp-action="Delete" asp-route-id="@transaction.Id">Delete</a>
 
+                                                    </div>
 
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,9 +269,10 @@
                     </div>
                     <div id="card-element-100625" class="collapse">
                         <div class="card-body">
-
-
-
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card text-center">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -211,75 +286,71 @@
                     </div>
                     <div id="card-element-357510" class="collapse show">
                         <div class="card-body">
-                            <div id="card-element-100625" class="collapse">
-                                <div class="card-body">
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="card text-white">
-                                            <h6 class="card-header bg-info">Catgories </h6>
-                                            <div class="card-body">
-                                                <table class="table table-bordered table-hover table-sm">
-                                                    <thead class="thead-success">
-                                                        <tr>
-                                                            <th>
-                                                                Name
-                                                            </th>
-                                                            <th>
-                                                                Description
-                                                            </th>
-                                                            <th>
-                                                                Action
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="card text-white">
 
-                                                        @foreach (var category in Model.Household.Categories)
-                                                        {
-                                                            <tr>
-                                                                <td>
-                                                                    @category.Name
-                                                                </td>
-                                                                <td>
-                                                                    @category.Description
-                                                                </td>
-                                                                <td>
-                                                                    <div class="btn-group btn-group-sm">
+                                    <table class="table table-bordered table-hover table-sm">
+                                        <thead class="thead-success">
+                                            <tr>
+                                                <th>
+                                                    Name
+                                                </th>
+                                                <th>
+                                                    Description
+                                                </th>
+                                                <th>
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                                                        <a class="btn btn-info" type="button" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
-                                                                        <a class="btn btn-warning" type="button" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@category.Id">Details</a>
-                                                                        <a class="btn btn-danger" type="button" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+                                            @foreach (var category in Model.Household.Categories)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @category.Name
+                                                    </td>
+                                                    <td>
+                                                        @category.Description
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-sm">
 
-                                                                    </div>
-                                                                </td>
+                                                            <a class="btn btn-info" type="button" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@category.Name">Edit</a>
+                                                            <a class="btn btn-warning" type="button" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@category.Id">Details</a>
+                                                            <a class="btn btn-danger" type="button" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
 
-                                                            </tr>
-                                                        }
+                                                        </div>
+                                                    </td>
 
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header bg-warning">
-                        <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-691557" href="#card-element-994154">Chart</a>
-                    </div>
-                    <div id="card-element-994154" class="collapse">
-                        <div class="card-body">
+            </div>
 
-                            Bar Chart
-                        </div>
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <a class="collapsed card-link text-white" data-toggle="collapse" data-parent="#card-691557" href="#card-element-994154">Chart</a>
+                </div>
+                <div id="card-element-994154" class="collapse">
+                    <div class="card-body">
+                        <!-- Category Types -->
+                        Bar Chart
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -343,7 +414,7 @@
                                                             <td>
                                                                 <div class="btn-group btn-group-sm">
 
-                                                                    <a class="btn btn-info" type="button" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
+                                                                    <a class="btn btn-info" type="button" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Name">Edit</a>
                                                                     <a class="btn btn-warning" type="button" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
                                                                     <a class="btn btn-danger" type="button" asp-controller="CategortItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
 
@@ -382,6 +453,8 @@
 <!--------------------------->
 <!-- Dashboard Layout Ends -->
 <!--------------------------->
+
+
 
 <div>
     <!--------------->
@@ -474,18 +547,16 @@
         </div>
     </div>
 
-    <!--------------->
-    <!-- Modal # 2 -->
-    <!--------------->
+   
 
 </div>
 
-
-
 <script src="~/js/jquery-3.3.1.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script src="~/js/jquery.dataTables.min.js"></script>
+
 
 @section Scripts {
+
     <script>
         $("btnSend").on("click", function () {
             $("frmInvite").submit();
@@ -494,12 +565,21 @@
         });
     </script>
 
+    <!------------------>
+    <!-- Charts Start -->
+    <!------------------>
     <script>
-        $("btnSend").on("click", function () {
-            $("frmTransaction").submit();
-            $("transaction").modal('hide');
-            $("#btnReset").click();
-        });
+           
+
+        //  //Morris Chart - Pie - S-Types
+        //$.post(Url3).then(function (response) {
+        //    console.log(response);
+        //    Morris.Donut({
+        //        element: 'myDonutChart',
+        //        data: response
+        //    });
+        //}); 
+
     </script>
 
 }

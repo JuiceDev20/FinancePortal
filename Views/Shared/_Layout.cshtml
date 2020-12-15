@@ -111,7 +111,7 @@
                                     <li><a asp-controller="HouseholdBankAccounts" asp-action="Index" asp-route-id="@householdId"><i class="icon-globe"></i>Bank Accounts</a></li>
                                     <li><a asp-controller="HouseholdCategories" asp-action="Index" asp-route-id="@householdId"><i class="icon-grid"></i>Categories</a></li>
                                     <li><a asp-controller="CategoryItems" asp-action="Index" asp-route-id="@householdId"><i class="icon-list"></i>Items</a></li>
-                                    <li><a asp-controller="HouseholdNotifications" asp-action="Index" asp-route-id="@householdId"><i class="icon-pencil"></i>Notifications</a></li>
+                                    <li><a asp-controller="Transactions" asp-action="Create" asp-route-id="@householdId"><i class="icon-pencil"></i>Transactions</a></li>
 
                                 </ul>
                             </nav>
@@ -126,6 +126,15 @@
         <!------------------------------>
         <div class="container-fluid" style="margin-top: 100px; padding-right: 40px; padding-left: 270px">
             <main>
+                @if (TempData["OverDraft"] != null)
+                {
+                    <div class="alert alert-icon-right alert-danger mb-4" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-lable="CLose"><svg data-dismiss="alert"></svg></button>
+                        <svg>...</svg>
+                        <strong>Warning!</strong> You're out of ca$h!!
+                    </div>
+                }
+
                 @RenderBody()
             </main>
         </div>
@@ -151,6 +160,17 @@
     <script src="~/js/knob.bundle.js"></script>
     <script src="~/js/chartist.bundle.js"></script>
     <script src="~/js/mainscripts.bundle.js"></script>
+
+    <!-- OverDraft Message -->
+
+    @*@if (!string.IsNullOrWhiteSpace(message))
+    {
+        <script>
+            $(document).ready(function alertFn() {
+                swal("@TempData["OverDraft"]")
+            });
+        </script>
+    }*@   
 
 
     <script>

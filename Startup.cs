@@ -32,9 +32,9 @@ namespace FinancePortal
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings")); //Email services 44 + 45
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings")); 
             services.AddTransient<IEmailSender, EmailSender>();
-
+            services.AddScoped<INotificationService, NotificationService>();   //Hmm...
             services.AddScoped<IImageService, ImageService>();
 
             services.AddControllersWithViews();

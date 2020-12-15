@@ -48,7 +48,7 @@ $(function() {
     // notification popup
     toastr.options.closeButton = true;
     toastr.options.positionClass = 'toast-bottom-right';    
-    toastr['success']('Hello, welcome to Money Tracker, a unique finance app.');
+    toastr['success']('Hello, welcome to Money Tracker!!');
 });
 
 // top products

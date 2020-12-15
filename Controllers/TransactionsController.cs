@@ -6,6 +6,8 @@ using FinancePortal.Data;
 using FinancePortal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using FinancePortal.Services;
 
 namespace FinancePortal.Controllers
 {
@@ -13,11 +15,13 @@ namespace FinancePortal.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<FPUser> _userManager;
+        private readonly INotificationService _notificationService;
 
-        public TransactionsController(ApplicationDbContext context, UserManager<FPUser> userManager)
+        public TransactionsController(ApplicationDbContext context, UserManager<FPUser> userManager, INotificationService notificationService)
         {
             _context = context;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
 
         // GET: Transactions
@@ -48,9 +52,10 @@ namespace FinancePortal.Controllers
         public async Task<IActionResult> Create()
         {
             var householdId = (await _userManager.GetUserAsync(User)).HouseholdId;
+            ViewData["HouseholdId"] = householdId;
             var myBankAccounts = _context.HouseholdBankAccount.Where(b => b.HouseholdId == householdId);
             ViewData["HouseholdBankAccountId"] = new SelectList(myBankAccounts, "Id", "Name");
-            ViewData["CategoryItemId"] = new SelectList(_context.Set<CategoryItem>(), "Id", "Name");
+            ViewData["CategoryItemId"] = new SelectList(_context.CategoryItem, "Id", "Name");
             return View();
         }
 
@@ -59,18 +64,41 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategryItemId,HouseholdBankAccountId,FPUserId,ContentType,Memo,Amount")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("CategoryItemId,HouseholdBankAccountId,Type,Memo,Amount")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
                 transaction.FPUserId = _userManager.GetUserId(User);
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Dashboard", "Households");
+                //1.Deacrease the Current Balance
+                var account = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
+                var oldBalance = account.CurrentBalance;
+
+                if (transaction.Type == Enums.TransactionType.Deposit)
+                {
+                    account.CurrentBalance += transaction.Amount;
+                }
+                else
+                {
+                    //Withdrawal
+                    account.CurrentBalance -= transaction.Amount;
+                    //2.Increase the Actual Amount of associated Category Item
+                    var categoryItem = await _context.CategoryItem.FindAsync(transaction.CategoryItemId);
+                    categoryItem.ActualAmount += transaction.Amount;
+                }
+                await _context.SaveChangesAsync();
+                //3.Look for any needed modifications
+                if (account.CurrentBalance < 0)
+                {
+                    TempData["OverDraft"] = "You're out of ca$h!!";
+                }
+                await _notificationService.NotifyOverdraftAsync(transaction, account, oldBalance);
+                return RedirectToAction("Dashboard", "Households", new { id = (await _userManager.GetUserAsync(User)).HouseholdId });
             }
-            ViewData["HouseholdBankAccountId"] = new SelectList(_context.HouseholdBankAccount, "Id", "Name");
-            ViewData["CategoryItemId"] = new SelectList(_context.Set<CategoryItem>(), "Id", "Name");
-            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Name", transaction);
+            ViewData["HouseholdBankAccountId"] = new SelectList(_context.HouseholdBankAccount, "Id", "Name", transaction.HouseholdBankAccountId);
+            ViewData["CategoryItemId"] = new SelectList(_context.Set<CategoryItem>(), "Id", "Name", transaction.CategoryItemId);
+            ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Name", transaction.FPUserId);
             return View(transaction);
         }
 

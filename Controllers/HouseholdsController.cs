@@ -41,17 +41,16 @@ namespace FinancePortal.Controllers
             householdVm.Household = await _context.Household
                 .Include(h => h.Occupants)
                 .ThenInclude(u => u.Transactions)
-                .Include(h => h.Occupants)
                 .Include(u => u.Categories)
-                .ThenInclude(c => c.CategoryItems)
-                .Include(h => h.Occupants)
-                .ThenInclude(u => u.HouseholdBankAccounts)
+                .Include(c => c.CategoryItems)
+                .Include(u => u.BankAccounts)
                 .FirstOrDefaultAsync(m => m.Id == houseId);
             if (householdVm.Household == null)
             {
                 return NotFound();
 
             }
+            householdVm.Transactions = _context.Transaction.Include(t => t.CategoryItem).ToList();
 
             var catItems = new List<CategoryItem>();
 
@@ -299,5 +298,28 @@ namespace FinancePortal.Controllers
         {
             return _context.Household.Any(e => e.Id == id);
         }
+
+        //<< New Pie Chart >>
+
+        public JsonResult BankAccountChart()
+        {
+            List<ChartModel> result = new List<ChartModel>();
+
+            var account = _context.HouseholdBankAccount.ToList();
+
+            foreach (var bank in account)
+            {
+                result.Add(new ChartModel
+                {
+                    Values = bank.StartingBalance,
+                    Labels = bank.Name
+
+                });
+            }
+            return Json(result);
+        }
+
+
+
     }
 }

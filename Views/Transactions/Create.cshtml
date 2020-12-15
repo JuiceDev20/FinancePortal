@@ -15,36 +15,24 @@
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @if (!User.IsInRole("ADMIN") || !User.IsInRole("HEAD"))
-            {
-                <input type="hidden" asp-for="HouseholdBankAccountId" class="form-control" />
-                <input type="hidden" asp-for="CategoryItemId" class="form-control" />
-                <input type="hidden" asp-for="FPUserId" class="form-control" />
-                <input asp-for="Created" class="form-control" />
-            }
+            @Html.Hidden("HouseholdId", ViewData["HouseholdId"])
 
-            @if (User.IsInRole("ADMIN") || User.IsInRole("HEAD"))
-            {
+            <div class="form-group">
+                <label asp-for="CategoryItemId" class="control-label"></label>
+                <select asp-for="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
+                <span asp-validation-for="CategoryItemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HouseholdBankAccountId" class="control-label"></label>
+                <select asp-for="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
+                <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="CategoryItemId" class="control-label"></label>
-                    <span asp-validation-for="CategoryItemId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="HouseholdBankAccountId" class="control-label"></label>
-                    <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FPUserId" class="control-label"></label>
-                    <span asp-validation-for="FPUserId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Created" class="control-label"></label>
-                    <span asp-validation-for="Created" class="text-danger"></span>
-                </div>
-
-            }
-
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <select asp-for="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Memo" class="control-label"></label>
                 <input asp-for="Memo" class="form-control" />
@@ -55,11 +43,11 @@
                 <input asp-for="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            @*<div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
                 </label>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
