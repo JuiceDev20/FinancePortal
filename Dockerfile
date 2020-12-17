@@ -20,4 +20,4 @@ RUN dotnet publish "FinancePortal.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet FinancialPortal.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet FinancePortal.dll

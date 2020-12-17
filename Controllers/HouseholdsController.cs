@@ -51,7 +51,7 @@ namespace FinancePortal.Controllers
 
             }
             householdVm.Transactions = _context.Transaction.Include(t => t.CategoryItem).ToList();
-
+            householdVm.HouseholdInvitation.HouseholdId = houseId.Value;
             var catItems = new List<CategoryItem>();
 
             householdVm.HouseholdCategories = _context.HouseholdCategory.Where(c => c.HouseholdId == houseId).ToList();
@@ -298,28 +298,6 @@ namespace FinancePortal.Controllers
         {
             return _context.Household.Any(e => e.Id == id);
         }
-
-        //<< New Pie Chart >>
-
-        public JsonResult BankAccountChart()
-        {
-            List<ChartModel> result = new List<ChartModel>();
-
-            var account = _context.HouseholdBankAccount.ToList();
-
-            foreach (var bank in account)
-            {
-                result.Add(new ChartModel
-                {
-                    Values = bank.StartingBalance,
-                    Labels = bank.Name
-
-                });
-            }
-            return Json(result);
-        }
-
-
 
     }
 }

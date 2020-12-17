@@ -30,7 +30,8 @@ namespace FinancePortal.Services
                     HouseholdId = householdBankAccount.HouseholdId,
                     IsRead = false,
                     Subject = $"Your {householdBankAccount.Name} account has been overdrafted.",
-                    Body = $"{user.FullName} overdrafted the {householdBankAccount.Name} {householdBankAccount.AccountType} account on {transaction.Created:MMM dd,yyyy} by {Math.Abs(householdBankAccount.CurrentBalance)}"
+                    Body = $"{user.FullName} overdrafted the {householdBankAccount.Name} {householdBankAccount.AccountType} account on {transaction.Created:MMM dd,yyyy} by {Math.Abs(householdBankAccount.CurrentBalance):#.00} as a result of a transaction in the amount of {transaction.Amount:#.00}"
+                                   
                 };
 
                 _dbContext.Add(householdNotification);

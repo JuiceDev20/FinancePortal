@@ -1,0 +1,50 @@
+﻿@model FinancePortal.Models.HouseholdInvitation
+
+
+<div class="modal" id="#myModal">
+    <div class="modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center bg-success">
+                <h4 class="modal-title text-white">Househoold Invitation</h4>
+            </div>
+            <div class="modal-body bg-light justify-content-center">
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="HouseholdId" />
+                    <div class="form-group">
+                        <label asp-for="Expires" class="control-label"></label>
+                        <input asp-for="Expires" class="form-control" />
+                        <span asp-validation-for="Expires" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Subject" class="control-label"></label>
+                        <input asp-for="Subject" class="form-control" />
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Body" class="control-label"></label>
+                        <input asp-for="Body" class="form-control" />
+                        <span asp-validation-for="Body" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+
+}

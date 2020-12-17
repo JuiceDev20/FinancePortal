@@ -105,7 +105,7 @@ namespace FinancePortal.Controllers
         // GET: Transactions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null)         //Edit protocol ??
             {
                 return NotFound();
             }
