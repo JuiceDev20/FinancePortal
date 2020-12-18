@@ -78,6 +78,8 @@ namespace FinancePortal.Controllers
                 if (transaction.Type == Enums.TransactionType.Deposit)
                 {
                     account.CurrentBalance += transaction.Amount;
+                    _context.Update(account);
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
@@ -86,14 +88,19 @@ namespace FinancePortal.Controllers
                     //2.Increase the Actual Amount of associated Category Item
                     var categoryItem = await _context.CategoryItem.FindAsync(transaction.CategoryItemId);
                     categoryItem.ActualAmount += transaction.Amount;
+                    _context.Update(categoryItem);
+                    _context.Update(account);
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
+               
                 //3.Look for any needed modifications
                 if (account.CurrentBalance < 0)
                 {
                     TempData["OverDraft"] = "You're out of ca$h!!";
+                    await _notificationService.NotifyOverdraftAsync(transaction, account, oldBalance);
+                    return RedirectToAction("Dashboard", "Households", new { id = (await _userManager.GetUserAsync(User)).HouseholdId });
                 }
-                await _notificationService.NotifyOverdraftAsync(transaction, account, oldBalance);
+                
                 return RedirectToAction("Dashboard", "Households", new { id = (await _userManager.GetUserAsync(User)).HouseholdId });
             }
             ViewData["HouseholdBankAccountId"] = new SelectList(_context.HouseholdBankAccount, "Id", "Name", transaction.HouseholdBankAccountId);

@@ -13,7 +13,7 @@
 }
 
 <div class="d-flex justify-content-between mb-2">
-    <h1>@ViewData["Title"]</h1>
+    <h1 class="text-success">@ViewData["Title"]</h1>
 
     @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
     {
@@ -29,6 +29,82 @@
 
 
 <div class="container-fluid">
+    <div class="container-fluid">
+        <img src="~/images/Finance-1.jpg" style="width:100%; height:350px" />
+    </div>
+    <br />
+    <hr />
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="card-580792">
+                    <div class="card">
+                        <div class="card-header bg-info text-light">
+                            <div id="Account-members-btn" class="btn btn-outline-light" data-toggle="collapse" data-parent="#card-580792" href="#card-element-707760">Household Members</div>
+                        </div>
+                        <div id="card-element-707760" class="collapse show">
+                            <div class="card-body">
+                                <table class="table m-b-0 table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Role</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in Model.Household.Occupants)
+                                        {
+                                            <tr>
+                                                <td>@user.FirstName</td>
+                                                <td>
+                                                    @UserManager.GetRolesAsync(user).Result.FirstOrDefault()
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <h6 class="card-header bg-warning text-light">
+                    Current Balance
+                </h6>
+                <div class="card-body">
+                    <div height="400" id="currentBalanceChart">
+
+                    </div>
+                </div>
+                <div class="footer bg-transparent">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <h6 class="card-header bg-warning text-light">
+                    Recent Transactions
+                </h6>
+                <div class="card-body">
+                    <div height="400" id="TransactionChart">
+
+                    </div>
+                </div>
+                <div class="footer bg-transparent">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -59,9 +135,9 @@
                                         @account.CurrentBalance
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-success" asp-controller="Households" asp-action="Edit" asp-route-id="@account">Edit</a>
-                                        <a class="btn btn-outline-success" asp-controller="Households" asp-action="Details" asp-route-id="@account">Details</a>
-                                        <a class="btn btn-outline-danger" asp-controller="Households" asp-action="Delete" asp-route-id="@account">Delete</a>
+                                        <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
+                                        <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
+                                        <a class="btn btn-outline-danger" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
                                     </td>
                                 </tr>
                             }
@@ -100,9 +176,9 @@
                                                 @householdCategory.TargetAmount
                                             </td>
                                             <td>
-                                                <a class="btn btn-outline-success" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@householdCategory">Edit</a>
-                                                <a class="btn btn-outline-success" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@householdCategory">Details</a>
-                                                <a class="btn btn-outline-danger" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@householdCategory">Delete</a>
+                                                <a class="btn btn-outline-info" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@householdCategory.Id">Edit</a>
+                                                <a class="btn btn-outline-info" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@householdCategory.Id">Details</a>
+                                                <a class="btn btn-outline-danger" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@householdCategory.Id">Delete</a>
                                             </td>
                                         </tr>
                                     }
@@ -147,9 +223,9 @@
                                                             @categoryItem.ActualAmount
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-outline-success" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem">Edit</a>
-                                                            <a class="btn btn-outline-success" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem">Details</a>
-                                                            <a class="btn btn-outline-danger" asp-controller="CategoryItems" asp-action="Delete" asp-route-id="@categoryItem">Delete</a>
+                                                            <a class="btn btn-outline-info" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
+                                                            <a class="btn btn-outline-info" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
+                                                            <a class="btn btn-outline-danger" asp-controller="CategoryItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
                                                         </td>
                                                     </tr>
                                                 }
@@ -161,117 +237,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <h5 class="card-header bg-info text-light">
-                                Household Members
-                            </h5>
-                            <div class="card-body">
-                                <p class="card-text">
-                                    <div class="container">
-                                        <div class="row mt-md-3">
-                                            <div class="col-md widget p-3 mr-md-3 ml-md-3">
-                                                <div id="card-034725">
-                                                    <div class="card">
-                                                        <div class="card-header">
-                                                            <a class="card-link" data-toggle="collapse" data-parent="#card-034725" href="#card-element-528956"> <h5>Members Of The House</h5></a>
-                                                        </div>
-                                                        <div id="card-element-528956" class="collapse show">
-                                                            <div class="row">
-                                                                <div class="shadow col-md widget p-3 m-md-3">
-                                                                    <table class="table table-responsive-sm">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>First Name</th>
-                                                                                <th>Role</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            @foreach (var user in Model.Household.Occupants)
-                                                                            {
-                                                                                <tr>
-                                                                                    <td>@user.FirstName</td>
-                                                                                    <td>
-                                                                                        @UserManager.GetRolesAsync(user).Result.FirstOrDefault()
-                                                                                    </td>
-                                                                                </tr>
-                                                                            }
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </p>
-                            </div>
-                            <div class="card-footer">
-
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <div class="card">
-            <h5 class="card-header bg-warning text-light">
-                Current Balance
-            </h5>
-            <div class="card-body">
-                <div width="350" id="currentBalanceChart">
 
-                </div>
-            </div>
-            <div class="card-footer">
 
-            </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="card">
-            <h5 class="card-header bg-warning text-light">
-                Transactions
-            </h5>
-            <div class="card-body">
-                <div width="350" id="TransactionChart">
-
-                </div>
-            </div>
-            <div class="card-footer">
-
-            </div>
-        </div>
-    </div>
 
 </div>
 
 
 
-    <!------------------------>
-    <!-- Chartjs Start Here -->
-    <!------------------------>
+
+<!------------------------>
+<!-- Charts Start Here -->
+<!------------------------>
 
 
-    @await Html.PartialAsync("_InvitationPartial", Model.HouseholdInvitation)
+@await Html.PartialAsync("_InvitationPartial", Model.HouseholdInvitation)
 
 
-    @section Scripts {
+@section Scripts {
 
-        <script>
-            $("#findme").on("click", (el) => { console.log(el.target) })
-        </script>
+    <script>
+        $("#findme").on("click", (el) => { console.log(el.target) })
+    </script>
 
-        <script>
+    <script>
         //Step 1 - Construct the URL needed to request the data
         var Url1 = '@Url.Action("CurrentBalanceChart", "Charts")'; // represent the endpoint
         var Url2 = '@Url.Action("TransactionChart", "Charts")'; // represent the endpoint
@@ -292,15 +283,15 @@
             };
             var responsiveOptions = [
                 ['screen and (min-width: 640px)', {
-                    chartPadding: 30,
-                    labelOffset: 100,
+                    chartPadding: 20,
+                    labelOffset: 50,
                     labelDirection: 'explode',
                     labelInterpolationFnc: function (value, i) {
                         return seriesarray[i] + ' ' + value;
                     }
                 }],
                 ['screen and (min-width: 1024px)', {
-                    labelOffset: 80,
+                    labelOffset: 40,
                     chartPadding: 20
                 }]
             ]; var data = {
@@ -317,6 +308,7 @@
                 response.forEach((el) => {
                     labelsarray.push(el.labels);
                     seriesarray.push(el.values);
+
                 });
                 var options = {
                     labelInterpolationFnc: function (value) {
@@ -325,15 +317,15 @@
                 };
                 var responsiveOptions = [
                     ['screen and (min-width: 640px)', {
-                        chartPadding: 30,
-                        labelOffset: 100,
+                        chartPadding: 20,
+                        labelOffset: 50,
                         labelDirection: 'explode',
                         labelInterpolationFnc: function (value, i) {
                             return seriesarray[i] + ' ' + value;
                         }
                     }],
                     ['screen and (min-width: 1024px)', {
-                        labelOffset: 80,
+                        labelOffset: 40,
                         chartPadding: 20
                     }]
                 ]; var data = {
@@ -345,6 +337,6 @@
             });
 
 
-        </script>
+    </script>
 
-    }
+}

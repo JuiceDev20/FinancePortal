@@ -26,7 +26,7 @@ namespace FinancePortal.Services
                 //Step 1. Create a new Notification record
                 var householdNotification = new HouseholdNotification
                 {
-                    Created = DateTime.Now,
+                    Created = DateTimeOffset.Now,
                     HouseholdId = householdBankAccount.HouseholdId,
                     IsRead = false,
                     Subject = $"Your {householdBankAccount.Name} account has been overdrafted.",

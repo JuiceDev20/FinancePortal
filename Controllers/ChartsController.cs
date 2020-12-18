@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace FinancePortal.Controllers
 {
@@ -37,16 +38,18 @@ namespace FinancePortal.Controllers
             return Json(result);
         }
 
-        public JsonResult TransactionChart()
+        public async Task<JsonResult> TransactionChart()
         {
             var result = new List<ChartModel>();
-
-            foreach (var transaction in _context.HouseholdBankAccount.Include(u => u.FPUser).ToList())
+            var user = await _userManager.GetUserAsync(User);
+            foreach (var transaction in _context.Transaction.Include(u => u.FPUser)
+                .Include(t => t.HouseholdBankAccount)
+                .Where(t => t.HouseholdBankAccount.HouseholdId == user.HouseholdId).ToList().OrderByDescending(t => t.Created).Take(5))
             {
                 var vm = new ChartModel
                 {
                     Labels = transaction.FPUser.FullName,
-                    Values = transaction.CurrentBalance
+                    Values = transaction.Amount
                 };
                 result.Add(vm);
             }
