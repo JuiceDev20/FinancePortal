@@ -8,7 +8,8 @@ namespace FinancePortal.Enums
     public enum TransactionType
     {
         Deposit,
-        PointOfSale,
+        PointOfSale,  //In-person purchase
+        ACH,          //Online purchase or payments
         Withdrawal
     }
 }

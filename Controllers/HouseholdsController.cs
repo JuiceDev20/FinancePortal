@@ -77,7 +77,7 @@ namespace FinancePortal.Controllers
             if (User.IsInRole(nameof(HouseholdRole.HEAD)) && memberCount > 1)
             {
                 //Send rule reminder
-                TempData["Message"] = "You cannot leave the Household until until all the members have left.";
+                TempData["Message"] = "You cannot leave the Household until all the other members have left.";
                 return RedirectToAction("Dashboard");
             }
             //Step 2: Remove the HouseholdId
