@@ -67,8 +67,10 @@ namespace FinancePortal.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
                 householdBankAccount.FPUserId = _userManager.GetUserId(User);
                 householdBankAccount.CurrentBalance = householdBankAccount.StartingBalance;
+                householdBankAccount.HouseholdId = (int)user.HouseholdId;
                 _context.Add(householdBankAccount);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Dashboard", "Households");

@@ -5,12 +5,6 @@ using System.Threading.Tasks;
 
 namespace FinancePortal.Data
 {
-    public enum HouseholdRole
-    {
-        ADMIN,
-        HEAD,
-        MEMBER
-    }
 
     public static class ContextSeed
     {

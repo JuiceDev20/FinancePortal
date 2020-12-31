@@ -1,6 +1,7 @@
 ﻿using FinancePortal.Data;
 using System;
 using System.ComponentModel.DataAnnotations;
+using FinancePortal.Enums;
 
 namespace FinancePortal.Models
 {

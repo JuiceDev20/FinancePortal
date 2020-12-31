@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using FinancePortal.Services
 @using FinancePortal.Data
+@using FinancePortal.Enums
 
 @inject IImageService ImageService
 @inject UserManager<FPUser> UserManager
@@ -34,10 +35,12 @@
     </div>
     <br />
     <hr />
-
+    <!------------------------->
+    <!-- Household Occupants -->
+    <!------------------------->
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4">
                 <div id="card-580792">
                     <div class="card">
                         <div class="card-header bg-info text-light">
@@ -69,9 +72,55 @@
                     </div>
                 </div>
             </div>
+            <!------------------->
+            <!-- Bank Accounts -->
+            <!------------------->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <div id="Bank-account-btn" class="btn btn-outline-light" area-expanded="false" data-toggle="collapse" data-target="#BankAccounts">Bank Accounts</div>
+                    </div>
+                    <div class="card-body collapse" id="BankAccounts">
+                        <table class="table m-b-0 table-hover">
+                            <thead class="thead-green">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Current Balance</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var account in Model.Household.BankAccounts)
+                                {
+                                    <tr>
+                                        <td>
+                                            @account.Name
+                                        </td>
+                                        <td>
+                                            @account.AccountType
+                                        </td>
+                                        <td>
+                                            @account.CurrentBalance
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
+                                            <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
+                                            <a class="btn btn-outline-danger" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
+    </div>
+    <!------------------------>
+    <!-- Bal & Trans Charts -->
+    <!------------------------>
     <div class="row">
         <div class="col-6">
             <div class="card">
@@ -105,48 +154,41 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header bg-info">
-                    <div id="Bank-account-btn" class="btn btn-outline-light" area-expanded="false" data-toggle="collapse" data-target="#BankAccounts">Bank Accounts</div>
-                </div>
-                <div class="card-body collapse" id="BankAccounts">
-                    <table class="table m-b-0 table-hover">
-                        <thead class="thead-green">
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Current Balance</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var account in Model.Household.BankAccounts)
-                            {
-                                <tr>
-                                    <td>
-                                        @account.Name
-                                    </td>
-                                    <td>
-                                        @account.AccountType
-                                    </td>
-                                    <td>
-                                        @account.CurrentBalance
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
-                                        <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
-                                        <a class="btn btn-outline-danger" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+    <!--Transactions -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="card-19881">
+                    <div class="card">
+                        <div class="card-header">
+                            <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-19881" href="#card-element-712477">Transactions</a>
+                        </div>
+                        <div id="card-element-712477" class="collapse">
+                            <div class="card-body">
+                                Build table
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <a class="btn btn-outline-info" data-toggle="modal" data-target="#Transactions">Create Transaction</a>
+                        </div>
+                        <div id="card-element-608126" class="collapse">
+                            <div class="card-body">
+                                Anim pariatur cliche...
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!---------------->
+    <!-- Categories -->
+    <!---------------->
 
     <div class="row">
         <div class="col-md-12">
@@ -187,6 +229,10 @@
                         </div>
                     </div>
                 </div>
+                <!-------------------->
+                <!-- Category Items -->
+                <!-------------------->
+
                 <div class="row">
                     <div class="col-md-12">
                         <div id="card-567890">
@@ -242,10 +288,70 @@
     </div>
 
 
-
 </div>
 
+<!-------------------------->
+<!-- Transactions Modal ---->
+<!-------------------------->
 
+<div class="modal fade" id="Transactions">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <form asp-controller="Transactions" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @Html.Hidden("HouseholdId", Model.HouseholdId)
+
+                <div class="form-group">
+                    <label class="control-label">Category Item</label>
+                    <select name="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label">HouseholdBankAccount</label>
+                    <select name="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Type</label>
+                    <select name="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Memo</label>
+                    <input name="Memo" class="form-control" />
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Amount</label>
+                    <input name="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                </div>
+                @*<div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                        </label>
+                    </div>*@
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-success" />
+                </div>
+            </form>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 <!------------------------>

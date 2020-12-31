@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using FinancePortal.Areas.Identity.Pages.Account;
 using FinancePortal.Models.View_Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FinancePortal.Controllers
 {
@@ -63,6 +64,10 @@ namespace FinancePortal.Controllers
                 }
             }
             householdVm.CategoryItems = catItems;
+            var bankAccounts = _context.HouseholdBankAccount.Where(ba => ba.HouseholdId == householdVm.HouseholdId).ToList();
+            ViewData["HouseholdBankAccountId"] = new SelectList(householdVm.Household.BankAccounts, "Id", "Name");
+ 
+            ViewData["CategoryItemId"] = new SelectList(householdVm.Household.CategoryItems, "Id", "Name");
             return View(householdVm);
         }
 
