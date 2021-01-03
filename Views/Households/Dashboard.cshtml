@@ -5,6 +5,7 @@
 
 @inject IImageService ImageService
 @inject UserManager<FPUser> UserManager
+@inject ApplicationDbContext Context
 
 @model FinancePortal.Models.View_Models.HouseholdViewModel
 
@@ -16,10 +17,6 @@
 <div class="d-flex justify-content-between mb-2">
     <h1 class="text-success">@ViewData["Title"]</h1>
 
-    @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
-    {
-        <a asp-controller="HouseholdInvitations" asp-action="Create" asp-route-id="@Model.Household.Id" type="button" class="btn btn-outline-danger">Invite</a>
-    }
 </div>
 
 @if (TempData["Message"] != null)
@@ -28,103 +25,173 @@
 }
 
 
-
 <div class="container-fluid">
     <div class="container-fluid">
         <img src="~/images/Finance-1.jpg" style="width:100%; height:350px" />
     </div>
     <br />
     <hr />
-    <!------------------------->
-    <!-- Household Occupants -->
-    <!------------------------->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <div id="card-580792">
-                    <div class="card">
-                        <div class="card-header bg-info text-light">
-                            <div id="Account-members-btn" class="btn btn-outline-light" data-toggle="collapse" data-parent="#card-580792" href="#card-element-707760">Household Members</div>
-                        </div>
-                        <div id="card-element-707760" class="collapse show">
-                            <div class="card-body">
-                                <table class="table m-b-0 table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Role</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var user in Model.Household.Occupants)
-                                        {
-                                            <tr>
-                                                <td>@user.FirstName</td>
-                                                <td>
-                                                    @UserManager.GetRolesAsync(user).Result.FirstOrDefault()
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!------------------->
-            <!-- Bank Accounts -->
-            <!------------------->
-            <div class="col-md-8">
+
+    <div class="row">
+        <!------------------------->
+        <!-- Household Occupants -->
+        <!------------------------->
+        <div class="col-md-4">
+            <div id="card-580792">
                 <div class="card">
-                    <div class="card-header bg-info">
-                        <div id="Bank-account-btn" class="btn btn-outline-light" area-expanded="false" data-toggle="collapse" data-target="#BankAccounts">Bank Accounts</div>
+                    <div class="card-header bg-light">
+                        <div id="Account-members-btn" class="btn btn-outline-success" data-toggle="collapse" data-parent="#card-580792" href="#card-element-707760">House Members</div>
                     </div>
-                    <div class="card-body collapse" id="BankAccounts">
-                        <table class="table m-b-0 table-hover">
-                            <thead class="thead-green">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Current Balance</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var account in Model.Household.BankAccounts)
-                                {
+                    <div id="card-element-707760" class="collapse show">
+                        <div class="card-body">
+                            <table class="table m-b-0 table-hover">
+                                <thead class="thead-success">
                                     <tr>
-                                        <td>
-                                            @account.Name
-                                        </td>
-                                        <td>
-                                            @account.AccountType
-                                        </td>
-                                        <td>
-                                            @account.CurrentBalance
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
-                                            <a class="btn btn-outline-info" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
-                                            <a class="btn btn-outline-danger" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
-                                        </td>
+                                        <th>First Name</th>
+                                        <th>Role</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Household.Occupants)
+                                    {
+                                        <tr>
+                                            <td>@user.FirstName</td>
+                                            <td>
+                                                @UserManager.GetRolesAsync(user).Result.FirstOrDefault()
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
+                            {
+                                <a class="btn btn-outline-success" data-toggle="modal" data-target="#Invitations">Create New Invitation</a>
+                                <a class="btn btn-outline-info" data-toggle="modal" data-target="#ReviewInvitations">Review Invitations</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-------------------------->
+        <!-- Bank Accounts Ledger -->
+        <!-------------------------->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <div id="Bank-account-btn" class="btn btn-outline-success" area-expanded="false" data-toggle="collapse" data-target="#BankAccounts">Bank Accounts Ledger</div>
+                </div>
+                <div class="card-body collapse" id="BankAccounts">
+                    <table class="table m-b-0 table-hover">
+                        <thead class="thead-success">
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Current Balance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var account in Model.Household.BankAccounts)
+                            {
+                                <tr>
+                                    <td>
+                                        @account.Name
+                                    </td>
+                                    <td>
+                                        @account.AccountType
+                                    </td>
+                                    <td>
+                                        @account.CurrentBalance
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-success" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
+                                        <a class="btn btn-outline-success" asp-controller="HouseholdBankAccounts" asp-action="Details" asp-route-id="@account.Id">Details</a>
+                                        <a class="btn btn-outline-danger" asp-controller="HouseholdBankAccounts" asp-action="Delete" asp-route-id="@account.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <a class="btn btn-outline-success" data-toggle="modal" data-target="#Transactions">Create New Transaction</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!------------------------>
+    <!--Transactions Ledger -->
+    <!------------------------>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="card-19881">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <a class="card-link collapsed btn btn-outline-success" data-toggle="collapse" data-parent="#card-19881" href="#card-element-712477">Transaction Ledger</a>
+                    </div>
+                    <div id="card-element-712477" class="collapse">
+                        <div class="card-body">
+                            <table class="table m-b-0 table-hover">
+                                <thead class="thead-success">
+                                    <tr>
+                                        <th>Category Item</th>
+                                        <th>Bank Account</th>
+                                        <th>User Name</th>
+                                        <th>Created</th>
+                                        <th>Memo</th>
+                                        <th>Amount</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var transaction in Model.Transactions)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @transaction.CategoryItemId
+                                            </td>
+                                            <td>
+                                                @transaction.HouseholdBankAccount.Household
+                                            </td>
+                                            <td>
+                                                @transaction.FPUser.FirstName
+                                            </td>
+                                            <td>
+                                                @transaction.Created.Date
+                                            </td>
+                                            <td>
+                                                @transaction.Memo
+                                            </td>
+                                            <td>
+                                                @transaction.Amount
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
+                                                <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Id">Details</a>
+                                                <a class="btn btn-outline-danger" asp-controller="Transactions" asp-action="Delete" asp-route-id="@transaction.Id">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <!------------------------>
     <!-- Bal & Trans Charts -->
     <!------------------------>
     <div class="row">
         <div class="col-6">
             <div class="card">
-                <h6 class="card-header bg-warning text-light">
+                <h6 class="card-header bg-light text-success">
                     Current Balance
                 </h6>
                 <div class="card-body">
@@ -139,7 +206,7 @@
         </div>
         <div class="col-6">
             <div class="card">
-                <h6 class="card-header bg-warning text-light">
+                <h6 class="card-header bg-light text-success">
                     Recent Transactions
                 </h6>
                 <div class="card-body">
@@ -154,38 +221,6 @@
         </div>
     </div>
 
-    <!--Transactions -->
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div id="card-19881">
-                    <div class="card">
-                        <div class="card-header">
-                            <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-19881" href="#card-element-712477">Transactions</a>
-                        </div>
-                        <div id="card-element-712477" class="collapse">
-                            <div class="card-body">
-                                Build table
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <a class="btn btn-outline-info" data-toggle="modal" data-target="#Transactions">Create Transaction</a>
-                        </div>
-                        <div id="card-element-608126" class="collapse">
-                            <div class="card-body">
-                                Anim pariatur cliche...
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <!---------------->
     <!-- Categories -->
     <!---------------->
@@ -194,13 +229,13 @@
         <div class="col-md-12">
             <div id="card-345678">
                 <div class="card">
-                    <div class="card-header bg-info">
-                        <div id="Categories" class="btn btn-outline-light" data-toggle="collapse" data-parent="#card-345678" href="#card-element-456789">Categories</div>
+                    <div class="card-header bg-light">
+                        <div id="Categories" class="btn btn-outline-success" data-toggle="collapse" data-parent="#card-345678" href="#card-element-456789">Category Ledger</div>
                     </div>
                     <div id="card-element-456789" class="collapse show">
                         <div class="card-body">
                             <table class="table m-b-0 table-hover">
-                                <thead class="thead-green">
+                                <thead class="thead-success">
                                     <tr>
                                         <th>Description</th>
                                         <th>Amount</th>
@@ -218,8 +253,8 @@
                                                 @householdCategory.TargetAmount
                                             </td>
                                             <td>
-                                                <a class="btn btn-outline-info" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@householdCategory.Id">Edit</a>
-                                                <a class="btn btn-outline-info" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@householdCategory.Id">Details</a>
+                                                <a class="btn btn-outline-success" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@householdCategory.Id">Edit</a>
+                                                <a class="btn btn-outline-success" asp-controller="HouseholdCategories" asp-action="Details" asp-route-id="@householdCategory.Id">Details</a>
                                                 <a class="btn btn-outline-danger" asp-controller="HouseholdCategories" asp-action="Delete" asp-route-id="@householdCategory.Id">Delete</a>
                                             </td>
                                         </tr>
@@ -229,23 +264,23 @@
                         </div>
                     </div>
                 </div>
+
                 <!-------------------->
                 <!-- Category Items -->
                 <!-------------------->
-
                 <div class="row">
                     <div class="col-md-12">
                         <div id="card-567890">
                             <div class="card">
-                                <div class="card-header bg-info">
-                                    <div id="CategoryItems" class="btn btn-outline-light" data-toggle="collapse" data-parent="#card-567890" href="#card-element-678901">Category Items</div>
+                                <div class="card-header bg-light">
+                                    <div id="CategoryItems" class="btn btn-outline-success" data-toggle="collapse" data-parent="#card-567890" href="#card-element-678901">Category Item Ledger</div>
                                 </div>
                                 <div id="card-element-678901" class="collapse">
                                     <div class="card-body">
                                         <table class="table m-b-0 table-hover">
-                                            <thead class="thead-green">
+                                            <thead class="thead-success">
                                                 <tr>
-                                                    <th>User Name</th>
+                                                    <th>Category Item</th>
                                                     <th>Description</th>
                                                     <th>Target Amount</th>
                                                     <th>Actual Amount</th>
@@ -269,8 +304,8 @@
                                                             @categoryItem.ActualAmount
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-outline-info" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
-                                                            <a class="btn btn-outline-info" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
+                                                            <a class="btn btn-outline-success" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
+                                                            <a class="btn btn-outline-success" asp-controller="CategoryItems" asp-action="Details" asp-route-id="@categoryItem.Id">Details</a>
                                                             <a class="btn btn-outline-danger" asp-controller="CategoryItems" asp-action="Delete" asp-route-id="@categoryItem.Id">Delete</a>
                                                         </td>
                                                     </tr>
@@ -287,62 +322,105 @@
         </div>
     </div>
 
-
 </div>
 
-<!-------------------------->
-<!-- Transactions Modal ---->
-<!-------------------------->
-
-<div class="modal fade" id="Transactions">
+<!------------------------------>
+<!-- Create Invitations Modal -->
+<!------------------------------>
+<div class="modal" id="Invitations">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title"></h4>
+                <h4 class="modal-title text-success">Create Invitation</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-
             <!-- Modal body -->
-            <form asp-controller="Transactions" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
+            <form asp-controller="HouseholdInvitations" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 @Html.Hidden("HouseholdId", Model.HouseholdId)
 
                 <div class="form-group">
-                    <label class="control-label">Category Item</label>
-                    <select name="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
-
+                    <label class="control-label">Expires</label>
+                    <input type="date" name="Expires" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label">HouseholdBankAccount</label>
-                    <select name="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
-
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label">Type</label>
-                    <select name="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
+                    <label class="control-label">Email To</label>
+                    <input name="EmailTo" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Memo</label>
-                    <input name="Memo" class="form-control" />
-
+                    <label class="control-label">Subject</label>
+                    <input name="Subject" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Amount</label>
-                    <input name="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                    <label class="control-label">Body</label>
+                    <input name="Body" class="form-control" />
                 </div>
-                @*<div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                        </label>
-                    </div>*@
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-success" />
+                    <input type="submit" value="Create" class="btn btn-outline-success" />
                 </div>
             </form>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!------------------------------>
+<!-- Review Invitations Modal -->
+<!------------------------------>
+<div class="modal" id="ReviewInvitations">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header ml-2 mr-2">
+                <h4 class="modal-title text-success">Review Invitations</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <table class="table m-b-0 table-hover">
+                <thead class="thead-success">
+                    <tr>
+                        <th>Created</th>
+                        <th>Expires</th>
+                        <th>Accepted</th>
+                        <th>IsValid</th>
+                        <th>Email</th>
+                        @*<th>Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var householdInvitation in Model.Household.Invitations)  
+                    {
+                        <tr>
+                            <td>
+                                @householdInvitation.Created
+                            </td>
+                            <td>
+                                @householdInvitation.Expires
+                            </td>
+                            <td>
+                                @householdInvitation.Accepted
+                            </td>
+                            <td>
+                                @householdInvitation.IsValid
+                            </td>
+                            <td>
+                                @householdInvitation.EmailTo
+                            </td>
+                            @*<td>
+                                <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Edit" asp-route-id="@householdInvitation.Id">Edit</a>
+                                <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Details" asp-route-id="@householdInvitation.Id">Details</a>
+                                <a class="btn btn-outline-danger" asp-controller="HouseholdInvitations" asp-action="Delete" asp-route-id="@householdInvitation.Id">Delete</a>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
             <!-- Modal footer -->
             <div class="modal-footer">
@@ -353,11 +431,59 @@
     </div>
 </div>
 
+<!------------------------------->
+<!-- Create Transactions Modal -->
+<!------------------------------->
+<div class="modal fade" id="Transactions">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-success">Create Transaction</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form asp-controller="Transactions" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @Html.Hidden("HouseholdId", Model.HouseholdId)
+
+                <div class="form-group">
+                    <label class="control-label">Category Item</label>
+                    <select name="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">HouseholdBankAccount</label>
+                    <select name="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Type</label>
+                    <select name="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Memo</label>
+                    <input name="Memo" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Amount</label>
+                    <input name="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-outline-success" />
+                </div>
+            </form>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+   
 <!------------------------>
 <!-- Charts Start Here -->
 <!------------------------>
-
 
 @await Html.PartialAsync("_InvitationPartial", Model.HouseholdInvitation)
 

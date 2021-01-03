@@ -7,7 +7,7 @@ namespace FinancePortal.Models
 {
     public class ChartModel
     {
-        public decimal Values { get; set; }   //Bank Accounts - Donut Chart "Current Balance"
+        public decimal Values { get; set; }   //Bank Accounts - Pie Chart "Current Balance"
 
         public string Labels { get; set; }
 

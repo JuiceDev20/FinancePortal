@@ -83,7 +83,7 @@ namespace FinancePortal.Controllers
                 }
                 else
                 {
-                    //Withdrawal
+                    //Withdrawal or PointOfSale or ACH 
                     account.CurrentBalance -= transaction.Amount;
                     //2.Increase the Actual Amount of associated Category Item
                     var categoryItem = await _context.CategoryItem.FindAsync(transaction.CategoryItemId);

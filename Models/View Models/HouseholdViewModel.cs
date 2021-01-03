@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +17,23 @@ namespace FinancePortal.Models.View_Models
             Transactions = new List<Transaction>();
 
         }
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal TargetAmount { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal ActualAmount { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal StartingBalance { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal CurrentBalance { get; set; }
+
+
         public int HouseholdId { get; set; }
 
         public Household Household { get; set; }

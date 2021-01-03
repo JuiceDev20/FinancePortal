@@ -77,14 +77,14 @@
                     <!--------------------------------------------------------------->
                     <!-- Top Navbar Right-Corner (Calendar, Chat, Email) Navigation-->
                     <!--------------------------------------------------------------->
-                    <div id="navbar-menu">
+                    <!--<div id="navbar-menu">
                         <ul class="nav navbar-nav">
                             <li><a asp-controller="Households" asp-action="Dashboard" class="icon-menu d-none d-sm-block"><i class="icon-home"></i></a></li>
                             <li><a asp-controller="Households" asp-action="Index" class="icon-menu d-none d-sm-block"><i class="icon-anchor"></i></a></li>
 
 
                         </ul>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </nav>
@@ -113,7 +113,7 @@
                             <nav class="sidebar-nav">
                                 <ul class="main-menu metismenu">
                                     <li class="nav-link active"><span>Navigation</span></li>
-                                    <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-user"></i>Personal Acct.</a></li>
+                                    <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-home"></i>Dashboard</a></li>
                                     <li><a href="#" class="myBtn" data-toggle="modal" data-target="#BankAccounts"><i class="icon-wallet"></i>Bank Accounts</a></li>
                                     <li><a href="#" class="myBtn" data-toggle="modal" data-target="#HouseholdCategories"><i class="icon-grid"></i>Categories</a></li>
                                     @*<li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId" ><i class="icon-list"></i>Items</a></li>
@@ -137,20 +137,17 @@
             <div class="modal fade" id="BankAccounts">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
-
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title"></h4>
+                            <h4 class="modal-title text-success">Create Bank Account</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="modal-content">
                                 <form asp-controller="HouseholdBankAccounts" asp-action="Create" enctype="multipart/form-data">
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
-
                                     <div class="form-group">
                                         <label class="control-label">Name</label>
                                         <input name="Name" class="form-control" />
@@ -158,20 +155,17 @@
                                     <div class="form-group">
                                         <label name="AccountType" class="control-label">AccountType</label>
                                         <select name="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
-
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">StartingBalance</label>
                                         <input name="StartingBalance" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
-
                                     </div>
                                     <div class="form-group">
-                                        <input type="submit" value="Create" class="btn btn-success" />
+                                        <input type="submit" value="Create" class="btn btn-outline-success" />
                                     </div>
                                 </form>
                             </div>
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -181,20 +175,18 @@
                 </div>
             </div>
 
-            <!------------------------>
-            <!-- Categories Modal ---->
-            <!------------------------>
+            <!---------------------------------->
+            <!-- Household Categories Modal ---->
+            <!---------------------------------->
 
             <div class="modal fade" id="HouseholdCategories">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
-
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title"></h4>
+                            <h4 class="modal-title text-success">Create Categories</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="modal-content">
@@ -212,12 +204,11 @@
                                         <input name="Description" class="form-control" />
                                     </div>
                                     <div class="form-group">
-                                        <input type="submit" value="Create" class="btn btn-success" />
+                                        <input type="submit" value="Create" class="btn btn-outline-success" />
                                     </div>
                                 </form>
                             </div>
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -226,7 +217,6 @@
                     </div>
                 </div>
             </div>
-
 
         }
         <!----------------------------->
@@ -270,33 +260,7 @@
     <script src="~/js/chartist.bundle.js"></script>
     <script src="~/js/mainscripts.bundle.js"></script>
 
-    <!------------------>
-    <!-- Modal Script -->
-    <!------------------>
-    @*<script>
-        $(document).on('click', '#myBtn', function () {
-            var btn = this.dataset.bid;
-
-            var modal = document.getElementById('myModal');
-            var modalb = btn;
-
-            var span = document.getElementsByClassName("close")[0];
-
-            btn.onclick = function () {
-                modal.modalb.style.display = "block";
-            }
-
-            span.onclick = function () {
-                modal.modalb.style.display = "none";
-            }
-
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.modalb.style.display = "none";
-                }
-            }
-        });
-    </script>*@
+   
 
     <script>
         $(document).ready(function () {

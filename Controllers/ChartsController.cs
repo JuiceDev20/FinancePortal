@@ -48,7 +48,7 @@ namespace FinancePortal.Controllers
             {
                 var vm = new ChartModel
                 {
-                    Labels = transaction.FPUser.FullName,
+                    Labels = transaction.FPUser.FirstName,
                     Values = transaction.Amount
                 };
                 result.Add(vm);

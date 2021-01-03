@@ -11,7 +11,7 @@
 </p>
 <div class="card">
     <table class="table m-b-0 table-hover">
-        <thead class="thead-green">
+        <thead class="thead-success">
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Created)
@@ -75,9 +75,9 @@
                         @Html.DisplayFor(modelItem => item.Code)
                     </td>
                     <td>
-                        <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-outline-success" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>
             }
