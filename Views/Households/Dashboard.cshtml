@@ -14,6 +14,11 @@
 
 }
 
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+
+}
+
 <div class="d-flex justify-content-between mb-2">
     <h1 class="text-success">@ViewData["Title"]</h1>
 
@@ -23,6 +28,144 @@
 {
     <h1 class="text-danger">@TempData["Message"]</h1>
 }
+
+<!----------------->
+<!-- Side Navbar -->
+<!----------------->
+<div id="wrapper">
+    @if (User.IsInRole("HEAD") || User.IsInRole("MEMBER"))
+    {
+        var userId = UserManager.GetUserId(User);
+        var user = Context.Users.Find(userId);
+        var householdId = user.HouseholdId;
+
+        <!---------------------->
+        <!-- Left Side Navbar -->
+        <!---------------------->
+        <div id="left-sidebar" class="sidebar">
+            <div class="sidebar-scroll">
+                <div class="user-account">
+                    <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
+                    <hr>
+
+                </div>
+                <!------------------->
+                <!-- Overview Tab --->
+                <!------------------->
+                <div class="tab-content p-l-0 p-r-0">
+                    <div class="tab-pane animated fadeIn active" id="hr_menu">
+                        <nav class="sidebar-nav">
+                            <ul class="main-menu metismenu">
+                                <li class="nav-link active"><span>Navigation</span></li>
+                                <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-home"></i>Dashboard</a></li>
+                                <li><a href="#" class="myBtn" data-toggle="modal" data-target="#BankAccounts"><i class="icon-wallet"></i>Bank Accounts</a></li>
+                                <li><a href="#" class="myBtn" data-toggle="modal" data-target="#HouseholdCategories"><i class="icon-grid"></i>Categories</a></li>
+                                <li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId" ><i class="icon-list"></i>Items</a></li>
+                                <li><a asp-controller="Transactions" asp-action="Create" asp-route-id="@householdId" ><i class="icon-pencil"></i>Transactions</a></li>
+ 
+                                <!-- This logout link is identical to the one in the Bug Tracker -->
+                                <li><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home")"><i class="icon-power"></i>Logout</a></li>
+
+                                <li><a asp-controller="Households" asp-action="Leave" asp-route-id="@householdId"><i class="icon-plane"></i>Leave Account</a></li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (currentUser != null)
+    {
+        <!------------------------>
+        <!-- Bank Acct. Modal ---->
+        <!------------------------>
+        <div class="modal fade" id="BankAccounts">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title text-success">Create Bank Account</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="modal-content">
+                            <form asp-controller="HouseholdBankAccounts" asp-action="Create" enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
+                                <div class="form-group">
+                                    <label class="control-label">Name</label>
+                                    <input name="Name" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label name="AccountType" class="control-label">AccountType</label>
+                                    <select name="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">StartingBalance</label>
+                                    <input name="StartingBalance" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Create" class="btn btn-outline-success" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!---------------------------------->
+        <!-- Household Categories Modal ---->
+        <!---------------------------------->
+        <div class="modal fade" id="HouseholdCategories">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title text-success">Create Categories</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="modal-content">
+                            <form asp-controller="HouseholdCategories" asp-action="Create" enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
+
+                                <div class="form-group">
+                                    <label class="control-label">Name</label>
+                                    <input name="Name" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Description</label>
+                                    <input name="Description" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Create" class="btn btn-outline-success" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
 
 
 <div class="container-fluid">
@@ -104,7 +247,7 @@
                                         @account.AccountType
                                     </td>
                                     <td>
-                                        @account.CurrentBalance
+                                        $@account.CurrentBalance
                                     </td>
                                     <td>
                                         <a class="btn btn-outline-success" asp-controller="HouseholdBankAccounts" asp-action="Edit" asp-route-id="@account.Id">Edit</a>
@@ -151,7 +294,7 @@
                                     {
                                         <tr>
                                             <td>
-                                                @transaction.CategoryItemId
+                                                @transaction.CategoryItem.Name
                                             </td>
                                             <td>
                                                 @transaction.HouseholdBankAccount.Household
@@ -166,7 +309,7 @@
                                                 @transaction.Memo
                                             </td>
                                             <td>
-                                                @transaction.Amount
+                                                $@transaction.Amount
                                             </td>
                                             <td>
                                                 <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
@@ -180,7 +323,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -237,6 +379,7 @@
                             <table class="table m-b-0 table-hover">
                                 <thead class="thead-success">
                                     <tr>
+                                        <th>Category</th>
                                         <th>Description</th>
                                         <th>Amount</th>
                                         <th>Action</th>
@@ -247,10 +390,13 @@
                                     {
                                         <tr>
                                             <td>
+                                                @householdCategory.Name
+                                            </td>
+                                            <td>
                                                 @householdCategory.Description
                                             </td>
                                             <td>
-                                                @householdCategory.TargetAmount
+                                                $@householdCategory.TargetAmount
                                             </td>
                                             <td>
                                                 <a class="btn btn-outline-success" asp-controller="HouseholdCategories" asp-action="Edit" asp-route-id="@householdCategory.Id">Edit</a>
@@ -298,10 +444,10 @@
                                                             @categoryItem.Description
                                                         </td>
                                                         <td>
-                                                            @categoryItem.TargetAmount
+                                                            $@categoryItem.TargetAmount
                                                         </td>
                                                         <td>
-                                                            @categoryItem.ActualAmount
+                                                           $@categoryItem.ActualAmount
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-outline-success" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
@@ -339,7 +485,7 @@
             <form asp-controller="HouseholdInvitations" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                @Html.Hidden("HouseholdId", Model.HouseholdId)
+                @Html.Hidden("HouseholdId", Model.Household.Id)
 
                 <div class="form-group">
                     <label class="control-label">Expires</label>
@@ -390,11 +536,11 @@
                         <th>Accepted</th>
                         <th>IsValid</th>
                         <th>Email</th>
-                        @*<th>Action</th>*@
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var householdInvitation in Model.Household.Invitations)  
+                    @foreach (var householdInvitation in Model.Household.Invitations)
                     {
                         <tr>
                             <td>
@@ -412,16 +558,15 @@
                             <td>
                                 @householdInvitation.EmailTo
                             </td>
-                            @*<td>
-                                <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Edit" asp-route-id="@householdInvitation.Id">Edit</a>
-                                <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Details" asp-route-id="@householdInvitation.Id">Details</a>
-                                <a class="btn btn-outline-danger" asp-controller="HouseholdInvitations" asp-action="Delete" asp-route-id="@householdInvitation.Id">Delete</a>
-                            </td>*@
+                            <td>
+                                    <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Edit" asp-route-id="@householdInvitation.Id">Edit</a>
+                                    <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Details" asp-route-id="@householdInvitation.Id">Details</a>
+                                    <a class="btn btn-outline-danger" asp-controller="HouseholdInvitations" asp-action="Delete" asp-route-id="@householdInvitation.Id">Delete</a>
+                                </td>
                         </tr>
                     }
                 </tbody>
             </table>
-
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -437,7 +582,6 @@
 <div class="modal fade" id="Transactions">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title text-success">Create Transaction</h4>
@@ -447,14 +591,14 @@
             <form asp-controller="Transactions" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                @Html.Hidden("HouseholdId", Model.HouseholdId)
+                @Html.Hidden("HouseholdId", Model.Household.Id)
 
                 <div class="form-group">
                     <label class="control-label">Category Item</label>
                     <select name="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
                 </div>
                 <div class="form-group">
-                    <label class="control-label">HouseholdBankAccount</label>
+                    <label class="control-label">Bank Account</label>
                     <select name="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
                 </div>
                 <div class="form-group">
@@ -480,7 +624,7 @@
         </div>
     </div>
 </div>
-   
+
 <!------------------------>
 <!-- Charts Start Here -->
 <!------------------------>
@@ -519,7 +663,7 @@
                     labelOffset: 50,
                     labelDirection: 'explode',
                     labelInterpolationFnc: function (value, i) {
-                        return seriesarray[i] + ' ' + value;
+                        return "$" + seriesarray[i] + ' ' + value;
                     }
                 }],
                 ['screen and (min-width: 1024px)', {
@@ -553,7 +697,7 @@
                         labelOffset: 50,
                         labelDirection: 'explode',
                         labelInterpolationFnc: function (value, i) {
-                            return seriesarray[i] + ' ' + value;
+                            return "$" + seriesarray[i] + ' ' + value;
                         }
                     }],
                     ['screen and (min-width: 1024px)', {

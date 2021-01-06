@@ -6,53 +6,60 @@
 
 <h1>Edit</h1>
 
-<h4>Transaction</h4>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CategoryItemId" class="control-label"></label>
-                <input asp-for="CategoryItemId" class="form-control" />
-                <span asp-validation-for="CategoryItemId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HouseholdBankAccountId" class="control-label"></label>
-                <input asp-for="HouseholdBankAccountId" class="form-control" />
-                <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FPUserId" class="control-label"></label>
-                <input asp-for="FPUserId" class="form-control" />
-                <span asp-validation-for="FPUserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="Memo" class="control-label"></label>
-                <input asp-for="Memo" class="form-control" />
-                <span asp-validation-for="Memo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                @*<label class="form-check-label">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-success">Transaction</h4>
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="CategoryItemId" class="control-label">Category Item</label>
+                        <input asp-for="CategoryItemId" class="form-control" />
+                        <span asp-validation-for="CategoryItemId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HouseholdBankAccountId" class="control-label">Bank Account</label>
+                        <input asp-for="HouseholdBankAccountId" class="form-control" />
+                        <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FPUserId" class="control-label">User</label>
+                        <input asp-for="FPUserId" class="form-control" />
+                        <span asp-validation-for="FPUserId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Created" class="control-label"></label>
+                        <input asp-for="Created" class="form-control" />
+                        <span asp-validation-for="Created" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Memo" class="control-label"></label>
+                        <input asp-for="Memo" class="form-control" />
+                        <span asp-validation-for="Memo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Amount" class="control-label"></label>
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        @*<label class="form-check-label">
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
                 </label>*@
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+
+       
     </div>
 </div>
 

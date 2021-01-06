@@ -46,6 +46,8 @@ namespace FinancePortal.Models.View_Models
 
         public HouseholdCategory HouseholdCategory { get; set; }  //If using a modal
 
+        public int HouseholdCategoryId { get; set; }
+
         public HouseholdInvitation HouseholdInvitation { get; set; } = new HouseholdInvitation(); 
 
         public List<HouseholdCategory> HouseholdCategories { get; set; }

@@ -45,6 +45,7 @@ namespace FinancePortal.Controllers
                 .Include(u => u.Categories)
                 .Include(c => c.CategoryItems)
                 .Include(u => u.BankAccounts)
+                .Include(i => i.Invitations)
                 .FirstOrDefaultAsync(m => m.Id == houseId);
             if (householdVm.Household == null)
             {
@@ -55,7 +56,7 @@ namespace FinancePortal.Controllers
             householdVm.HouseholdInvitation.HouseholdId = houseId.Value;
             var catItems = new List<CategoryItem>();
 
-            householdVm.HouseholdCategories = _context.HouseholdCategory.Where(c => c.HouseholdId == houseId).ToList();
+            householdVm.HouseholdCategories = _context.HouseholdCategory.Include(c => c.CategoryItems).Where(c => c.HouseholdId == houseId).ToList();
             foreach (var category in householdVm.HouseholdCategories)
             {
                 foreach (var categoryItem in category.CategoryItems.ToList())
@@ -67,7 +68,7 @@ namespace FinancePortal.Controllers
             var bankAccounts = _context.HouseholdBankAccount.Where(ba => ba.HouseholdId == householdVm.HouseholdId).ToList();
             ViewData["HouseholdBankAccountId"] = new SelectList(householdVm.Household.BankAccounts, "Id", "Name");
  
-            ViewData["CategoryItemId"] = new SelectList(householdVm.Household.CategoryItems, "Id", "Name");
+            ViewData["CategoryItemId"] = new SelectList(householdVm.CategoryItems, "Id", "Name");
             return View(householdVm);
         }
 

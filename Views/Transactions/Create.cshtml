@@ -8,45 +8,48 @@
 
 <h1>Create</h1>
 
-<h4>Transaction</h4>
 <hr />
 <div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-success">New Transaction</h4>
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            @Html.Hidden("HouseholdId", ViewData["HouseholdId"])
+                    @Html.Hidden("HouseholdId", ViewData["HouseholdId"])
 
-            <div class="form-group">
-                <label asp-for="CategoryItemId" class="control-label"></label>
-                <select asp-for="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
-                <span asp-validation-for="CategoryItemId" class="text-danger"></span>
+                    <div class="form-group">
+                        <label asp-for="CategoryItemId" class="control-label">Category Item</label>
+                        <select asp-for="CategoryItemId" asp-items="ViewBag.CategoryItemId" class="form-control"></select>
+                        <span asp-validation-for="CategoryItemId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HouseholdBankAccountId" class="control-label">Bank Account</label>
+                        <select asp-for="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
+                        <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Type" class="control-label">Account Type</label>
+                        <select asp-for="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Memo" class="control-label"></label>
+                        <input asp-for="Memo" class="form-control" />
+                        <span asp-validation-for="Memo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Amount" class="control-label"></label>
+                        <input asp-for="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-outline-success" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="HouseholdBankAccountId" class="control-label"></label>
-                <select asp-for="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
-                <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Memo" class="control-label"></label>
-                <input asp-for="Memo" class="form-control" />
-                <span asp-validation-for="Memo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-outline-success" />
-            </div>
-        </form>
+        </div>       
     </div>
 </div>
 

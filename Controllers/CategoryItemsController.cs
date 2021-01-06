@@ -52,7 +52,7 @@ namespace FinancePortal.Controllers
             var householdId = (await _userManager.GetUserAsync(User)).HouseholdId;
 
             //Categories for my Household
-            ViewData["CategoryId"] = new SelectList(_context.HouseholdCategory.Where(c => c.HouseholdId == householdId), "Id", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.HouseholdCategory.Where(c => c.HouseholdId == householdId).ToList(), "Id", "Name");
 
             return View();
         }

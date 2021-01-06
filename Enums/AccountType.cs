@@ -8,6 +8,8 @@ namespace FinancePortal.Enums
     public enum AccountType
     {
         Checking,
-        Savings
+        Savings,
+        Emergencies,
+        Retirement
     }
 }
