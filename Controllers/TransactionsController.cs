@@ -104,7 +104,7 @@ namespace FinancePortal.Controllers
                 return RedirectToAction("Dashboard", "Households", new { id = (await _userManager.GetUserAsync(User)).HouseholdId });
             }
             ViewData["HouseholdBankAccountId"] = new SelectList(_context.HouseholdBankAccount, "Id", "Name", transaction.HouseholdBankAccountId);
-            ViewData["CategoryItemId"] = new SelectList(_context.Set<CategoryItem>(), "Id", "Name", transaction.CategoryItemId);
+            ViewData["CategoryItemId"] = new SelectList(_context.CategoryItem, "Id", "Name", transaction.CategoryItemId);
             ViewData["FPUserId"] = new SelectList(_context.Users, "Id", "Name", transaction.FPUserId);
             return View(transaction);
         }

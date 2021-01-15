@@ -13,6 +13,7 @@ namespace FinancePortal.Models.View_Models
         {
             HouseholdBankAccounts = new List<HouseholdBankAccount>();
             HouseholdCategories = new List<HouseholdCategory>();
+            CategoryItems = new List<CategoryItem>();
             HouseholdNotifications = new List<HouseholdNotification>();
             Transactions = new List<Transaction>();
 

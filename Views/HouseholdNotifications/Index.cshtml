@@ -13,18 +13,10 @@
     <table class="table">
         <thead class="thead-success">
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Created)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Subject)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Body)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsRead)
-                </th>
+                <th>Created</th>
+                <th>Subject</th>
+                <th>Body</th>
+                <th>Is Read</th>
                 <th></th>
             </tr>
         </thead>
@@ -54,4 +46,4 @@
         </tbody>
     </table>
 </div>
-<a class="btn btn-primary" asp-controller="Households" asp-action="Dashboard">Back to Dashboard</a>
+<a class="btn btn-outline-primary" asp-controller="Households" asp-action="Dashboard">Back to Dashboard</a>

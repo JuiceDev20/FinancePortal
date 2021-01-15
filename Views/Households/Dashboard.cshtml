@@ -2,6 +2,7 @@
 @using FinancePortal.Services
 @using FinancePortal.Data
 @using FinancePortal.Enums
+@using System.Linq
 
 @inject IImageService ImageService
 @inject UserManager<FPUser> UserManager
@@ -29,143 +30,140 @@
     <h1 class="text-danger">@TempData["Message"]</h1>
 }
 
+
 <!----------------->
 <!-- Side Navbar -->
 <!----------------->
-<div id="wrapper">
-    @if (User.IsInRole("HEAD") || User.IsInRole("MEMBER"))
-    {
-        var userId = UserManager.GetUserId(User);
-        var user = Context.Users.Find(userId);
-        var householdId = user.HouseholdId;
 
-        <!---------------------->
-        <!-- Left Side Navbar -->
-        <!---------------------->
-        <div id="left-sidebar" class="sidebar">
-            <div class="sidebar-scroll">
-                <div class="user-account">
-                    <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
-                    <hr>
+@if (User.IsInRole("HEAD") || User.IsInRole("MEMBER"))
+{
+    var userId = UserManager.GetUserId(User);
+    var user = Context.Users.Find(userId);
+    var householdId = user.HouseholdId;
 
-                </div>
-                <!------------------->
-                <!-- Overview Tab --->
-                <!------------------->
-                <div class="tab-content p-l-0 p-r-0">
-                    <div class="tab-pane animated fadeIn active" id="hr_menu">
-                        <nav class="sidebar-nav">
-                            <ul class="main-menu metismenu">
-                                <li class="nav-link active"><span>Navigation</span></li>
-                                <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-home"></i>Dashboard</a></li>
-                                <li><a href="#" class="myBtn" data-toggle="modal" data-target="#BankAccounts"><i class="icon-wallet"></i>Bank Accounts</a></li>
-                                <li><a href="#" class="myBtn" data-toggle="modal" data-target="#HouseholdCategories"><i class="icon-grid"></i>Categories</a></li>
-                                <li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId" ><i class="icon-list"></i>Items</a></li>
-                                <li><a asp-controller="Transactions" asp-action="Create" asp-route-id="@householdId" ><i class="icon-pencil"></i>Transactions</a></li>
- 
-                                <!-- This logout link is identical to the one in the Bug Tracker -->
-                                <li><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home")"><i class="icon-power"></i>Logout</a></li>
+    <!---------------------->
+    <!-- Left Side Navbar -->
+    <!---------------------->
+    <div id="left-sidebar" class="sidebar">
+        <div class="sidebar-scroll">
+            <div class="user-account">
+                <img src="~/images/avatar9.jpg" class="rounded-circle user-photo" alt="User Profile Picture">
+                <hr>
 
-                                <li><a asp-controller="Households" asp-action="Leave" asp-route-id="@householdId"><i class="icon-plane"></i>Leave Account</a></li>
+            </div>
+            <!------------------->
+            <!-- Overview Tab --->
+            <!------------------->
+            <div class="tab-content p-l-0 p-r-0">
+                <div class="tab-pane animated fadeIn active" id="hr_menu">
+                    <nav class="sidebar-nav">
+                        <ul class="main-menu metismenu">
+                            <li class="nav-link active"><span>Navigation</span></li>
+                            <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-home"></i>Dashboard</a></li>
+                            <li><a asp-controller="HouseholdBankAccounts" asp-action="Create" asp-route-id="@householdId"><i class="icon-wallet"></i>Bank Accounts</a></li>  @*href="#" class="myBtn" data-toggle="modal" data-target="#BankAccounts"*@
+                            <li><a asp-controller="HouseholdCategories" asp-action="Create" asp-route-id="@householdId"><i class="icon-grid"></i>Categories</a></li>  @*href="#" class="myBtn" data-toggle="modal" data-target="#HouseholdCategories"*@
+                            <li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId"><i class="icon-list"></i>Items</a></li>
+                            @*<li><a asp-controller="Transactions" asp-action="Create" asp-route-id="@householdId"><i class="icon-pencil"></i>Transactions</a></li>*@
 
-                            </ul>
-                        </nav>
-                    </div>
+                            <li><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home")"><i class="icon-power"></i>Logout</a></li>
+
+                            <li><a asp-controller="Households" asp-action="Leave" asp-route-id="@householdId"><i class="icon-plane"></i>Leave Account</a></li>
+
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
-    }
+    </div>
+}
 
-    @if (currentUser != null)
-    {
-        <!------------------------>
-        <!-- Bank Acct. Modal ---->
-        <!------------------------>
-        <div class="modal fade" id="BankAccounts">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title text-success">Create Bank Account</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="modal-content">
-                            <form asp-controller="HouseholdBankAccounts" asp-action="Create" enctype="multipart/form-data">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
-                                <div class="form-group">
-                                    <label class="control-label">Name</label>
-                                    <input name="Name" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label name="AccountType" class="control-label">AccountType</label>
-                                    <select name="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">StartingBalance</label>
-                                    <input name="StartingBalance" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" value="Create" class="btn btn-outline-success" />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
 
+@if (currentUser != null)
+{
+    <!------------------------>
+    <!-- Bank Acct. Modal ---->
+    <!------------------------>
+    <div class="modal fade" id="BankAccounts">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title text-success">Create Bank Account</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="modal-content">
+                        <form asp-controller="HouseholdBankAccounts" asp-action="Create" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
+                            <div class="form-group">
+                                <label class="control-label">Name</label>
+                                <input name="Name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label name="AccountType" class="control-label">AccountType</label>
+                                <select name="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">StartingBalance</label>
+                                <input name="StartingBalance" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-outline-success" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!---------------------------------->
+    <!-- Household Categories Modal ---->
+    <!---------------------------------->
+    <div class="modal fade" id="HouseholdCategories">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title text-success">Create Categories</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="modal-content">
+                        <form asp-controller="HouseholdCategories" asp-action="Create" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
+
+                            <div class="form-group">
+                                <label class="control-label">Name</label>
+                                <input name="Name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Description</label>
+                                <input name="Description" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-outline-success" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-
-        <!---------------------------------->
-        <!-- Household Categories Modal ---->
-        <!---------------------------------->
-        <div class="modal fade" id="HouseholdCategories">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title text-success">Create Categories</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="modal-content">
-                            <form asp-controller="HouseholdCategories" asp-action="Create" enctype="multipart/form-data">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <input type="hidden" value="@currentUser.HouseholdId" name="HouseholdId" />
-
-                                <div class="form-group">
-                                    <label class="control-label">Name</label>
-                                    <input name="Name" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Description</label>
-                                    <input name="Description" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" value="Create" class="btn btn-outline-success" />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-    }
-
-</div>
+    </div>
+}
 
 
 <div class="container-fluid">
@@ -209,8 +207,8 @@
 
                             @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
                             {
-                                <a class="btn btn-outline-success" data-toggle="modal" data-target="#Invitations">Create New Invitation</a>
-                                <a class="btn btn-outline-info" data-toggle="modal" data-target="#ReviewInvitations">Review Invitations</a>
+                                <a class="btn btn-outline-success" data-toggle="modal" data-target="#Invitations">New Invitation</a>
+                                <a class="btn btn-outline-info" data-toggle="modal" data-target="#ReviewInvitations">Invitations Log</a>
                             }
                         </div>
                     </div>
@@ -259,69 +257,8 @@
                         </tbody>
                     </table>
 
-                    <a class="btn btn-outline-success" data-toggle="modal" data-target="#Transactions">Create New Transaction</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!------------------------>
-    <!--Transactions Ledger -->
-    <!------------------------>
-    <div class="row">
-        <div class="col-md-12">
-            <div id="card-19881">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <a class="card-link collapsed btn btn-outline-success" data-toggle="collapse" data-parent="#card-19881" href="#card-element-712477">Transaction Ledger</a>
-                    </div>
-                    <div id="card-element-712477" class="collapse">
-                        <div class="card-body">
-                            <table class="table m-b-0 table-hover">
-                                <thead class="thead-success">
-                                    <tr>
-                                        <th>Category Item</th>
-                                        <th>Bank Account</th>
-                                        <th>User Name</th>
-                                        <th>Created</th>
-                                        <th>Memo</th>
-                                        <th>Amount</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var transaction in Model.Transactions)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @transaction.CategoryItem.Name
-                                            </td>
-                                            <td>
-                                                @transaction.HouseholdBankAccount.Household
-                                            </td>
-                                            <td>
-                                                @transaction.FPUser.FirstName
-                                            </td>
-                                            <td>
-                                                @transaction.Created.Date
-                                            </td>
-                                            <td>
-                                                @transaction.Memo
-                                            </td>
-                                            <td>
-                                                $@transaction.Amount
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
-                                                <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Id">Details</a>
-                                                <a class="btn btn-outline-danger" asp-controller="Transactions" asp-action="Delete" asp-route-id="@transaction.Id">Delete</a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <a class="btn btn-outline-success" data-toggle="modal" data-target="#Transactions">New Transaction</a>
+                    <a class="btn btn-outline-success" data-toggle="modal" data-target="#TransacRegister">Transactions Register</a>
                 </div>
             </div>
         </div>
@@ -337,7 +274,7 @@
                     Current Balance
                 </h6>
                 <div class="card-body">
-                    <div height="400" id="currentBalanceChart">
+                    <div height="400" id="CurrentBalanceChart">
 
                     </div>
                 </div>
@@ -381,7 +318,7 @@
                                     <tr>
                                         <th>Category</th>
                                         <th>Description</th>
-                                        <th>Amount</th>
+                                        <th>Budget Amount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -428,7 +365,7 @@
                                                 <tr>
                                                     <th>Category Item</th>
                                                     <th>Description</th>
-                                                    <th>Target Amount</th>
+                                                    <th>Budget Amount</th>
                                                     <th>Actual Amount</th>
                                                     <th></th>
                                                 </tr>
@@ -447,7 +384,7 @@
                                                             $@categoryItem.TargetAmount
                                                         </td>
                                                         <td>
-                                                           $@categoryItem.ActualAmount
+                                                            $@categoryItem.ActualAmount
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-outline-success" asp-controller="CategoryItems" asp-action="Edit" asp-route-id="@categoryItem.Id">Edit</a>
@@ -509,7 +446,7 @@
             </form>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
             </div>
 
         </div>
@@ -524,7 +461,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header ml-2 mr-2">
-                <h4 class="modal-title text-success">Review Invitations</h4>
+                <h4 class="modal-title text-success">Invitations Log</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
@@ -559,17 +496,17 @@
                                 @householdInvitation.EmailTo
                             </td>
                             <td>
-                                    <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Edit" asp-route-id="@householdInvitation.Id">Edit</a>
-                                    <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Details" asp-route-id="@householdInvitation.Id">Details</a>
-                                    <a class="btn btn-outline-danger" asp-controller="HouseholdInvitations" asp-action="Delete" asp-route-id="@householdInvitation.Id">Delete</a>
-                                </td>
+                                <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Edit" asp-route-id="@householdInvitation.Id">Edit</a>
+                                <a class="btn btn-outline-success" asp-controller="HouseholdInvitations" asp-action="Details" asp-route-id="@householdInvitation.Id">Details</a>
+                                <a class="btn btn-outline-danger" asp-controller="HouseholdInvitations" asp-action="Delete" asp-route-id="@householdInvitation.Id">Delete</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
             </div>
 
         </div>
@@ -619,11 +556,79 @@
             </form>
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<!--------------------------------->
+<!-- Transactions Register Modal -->
+<!--------------------------------->
+
+<div class="modal" id="TransacRegister">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-success">Transactions Register</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <table class="table m-b-0 table-hover">
+                    <thead class="thead-success">
+                        <tr>
+                            <th>Category Item</th>
+                            <th>Bank Account</th>
+                            <th>User Name</th>
+                            <th>Created</th>
+                            <th>Memo</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Model.Transactions)
+                        {
+                            <tr>
+                                <td>
+                                    @transaction.CategoryItemId
+                                </td>
+                                <td>
+                                    @transaction.HouseholdBankAccount.Name
+                                </td>
+                                <td>
+                                    @transaction.FPUser.FirstName
+                                </td>
+                                <td>
+                                    @transaction.Created
+                                </td>
+                                <td>
+                                    @transaction.Memo
+                                </td>
+                                <td>
+                                    $@transaction.Amount
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
+                                    <a class="btn btn-outline-success" asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Id">Details</a>
+                                    <a class="btn btn-outline-danger" asp-controller="Transactions" asp-action="Delete" asp-route-id="@transaction.Id">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <!------------------------>
 <!-- Charts Start Here -->
@@ -675,8 +680,9 @@
                 series: seriesarray
             };
             console.log(labelsarray, seriesarray);
-            Chartist.Pie('#currentBalanceChart', data,options, responsiveOptions);
+            Chartist.Pie('#CurrentBalanceChart', data,options, responsiveOptions);
         });
+
             $.post(Url2).then(function (response) {
                 // console.log(response)
                 let labelsarray = [];
@@ -712,6 +718,7 @@
                 Chartist.Pie('#TransactionChart', data, options, responsiveOptions);
             });
 
+            // Chart to Compare Planned vs Actual Spending
 
     </script>
 

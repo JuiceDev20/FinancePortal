@@ -69,6 +69,9 @@ namespace FinancePortal.Controllers
             ViewData["HouseholdBankAccountId"] = new SelectList(householdVm.Household.BankAccounts, "Id", "Name");
  
             ViewData["CategoryItemId"] = new SelectList(householdVm.CategoryItems, "Id", "Name");
+
+            var houseInvitations = _context.HouseholdInvitation.Where(hi => hi.HouseholdId == householdVm.HouseholdId).ToList();
+            ViewData["HouseholdInvitationId"] = new SelectList(householdVm.Household.Invitations, "Id", "Name");
             return View(householdVm);
         }
 
@@ -132,6 +135,7 @@ namespace FinancePortal.Controllers
             .Include(c => c.Categories)
             .ThenInclude(c =>c.CategoryItems)
             .Include(o => o.Occupants)
+            .Include(i => i.Invitations)
             .Include(n => n.Notifications)
             .FirstOrDefaultAsync(o => o.Id == id);
 

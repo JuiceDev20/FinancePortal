@@ -26,16 +26,16 @@
                         <input asp-for="HouseholdBankAccountId" class="form-control" />
                         <span asp-validation-for="HouseholdBankAccountId" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label asp-for="FPUserId" class="control-label">User</label>
                         <input asp-for="FPUserId" class="form-control" />
                         <span asp-validation-for="FPUserId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
+                    </div>*@
+                    @*<div class="form-group">
                         <label asp-for="Created" class="control-label"></label>
                         <input asp-for="Created" class="form-control" />
                         <span asp-validation-for="Created" class="text-danger"></span>
-                    </div>
+                    </div>*@
                     <div class="form-group">
                         <label asp-for="Memo" class="control-label"></label>
                         <input asp-for="Memo" class="form-control" />
@@ -52,7 +52,7 @@
                 </label>*@
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <input type="submit" value="Save" class="btn btn-outline-success" />
                     </div>
                 </form>
             </div>
@@ -64,7 +64,7 @@
 </div>
 
 <div>
-    <a class="btn btn-primary" asp-controller="Households" asp-action="Dashboard">Back to List</a>
+    <a class="btn btn-outline-primary" asp-controller="Households" asp-action="Dashboard">Back to List</a>
 </div>
 
 @section Scripts {

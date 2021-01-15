@@ -23,7 +23,7 @@ namespace FinancePortal.Models
 
         public FPUser FPUser { get; set; }
 
-        public DateTimeOffset Created { get; set; }
+        public DateTime Created { get; set; } 
 
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Memo { get; set; }

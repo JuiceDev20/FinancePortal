@@ -17,18 +17,10 @@
                 @*<th>
                     @Html.DisplayNameFor(model => model.HouseholdCategoryId)
                 </th>*@
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    TargetAmount
-                </th>
-                <th>
-                    ActualAmount
-                </th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Budget Amount</th>
+                <th>Actual Amount</th>
                 <th></th>
             </tr>
         </thead>
@@ -36,9 +28,9 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.HouseholdCategoryId)
-                    </td>
+                    </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -61,4 +53,4 @@
         </tbody>
     </table>
 </div>
-<a class="btn btn-primary" asp-controller="Households" asp-action="Dashboard">Back to Dashboard</a>
+<a class="btn btn-outline-primary" asp-controller="Households" asp-action="Dashboard">Back to Dashboard</a>
