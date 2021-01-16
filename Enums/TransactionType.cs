@@ -10,6 +10,7 @@ namespace FinancePortal.Enums
         Deposit,
         PointOfSale,  //In-person purchase
         ACH,          //Online purchase or payments
-        Withdrawal
+        Withdrawal,
+        Transfer      //Move funds btn accounts
     }
 }

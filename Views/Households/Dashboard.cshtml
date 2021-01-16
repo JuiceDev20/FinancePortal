@@ -102,11 +102,11 @@
                                 <input name="Name" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label name="AccountType" class="control-label">AccountType</label>
+                                <label name="AccountType" class="control-label">Account Type</label>
                                 <select name="AccountType" class="form-control" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
                             </div>
                             <div class="form-group">
-                                <label class="control-label">StartingBalance</label>
+                                <label class="control-label">Starting Balance</label>
                                 <input name="StartingBalance" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
                             </div>
                             <div class="form-group">
@@ -165,7 +165,9 @@
     </div>
 }
 
-
+<!--------------------->
+<!-- Jumbotron Image -->
+<!--------------------->
 <div class="container-fluid">
     <div class="container-fluid">
         <img src="~/images/Finance-1.jpg" style="width:100%; height:300px" />
@@ -174,47 +176,6 @@
     <hr />
 
     <div class="row">
-        <!------------------------->
-        <!-- Household Occupants -->
-        <!------------------------->
-        <div class="col-md-6">
-            <div id="card-580792">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <div id="Account-members-btn" class="btn btn-info" data-toggle="collapse" data-parent="#card-580792" href="#card-element-707760">House Members</div>
-                    </div>
-                    <div id="card-element-707760" class="collapse show">
-                        <div class="card-body">
-                            <table class="table m-b-0 table-hover">
-                                <thead class="thead-success">
-                                    <tr>
-                                        <th>First Name</th>
-                                        <th>Role</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var user in Model.Household.Occupants)
-                                    {
-                                        <tr>
-                                            <td>@user.FirstName</td>
-                                            <td>
-                                                @UserManager.GetRolesAsync(user).Result.FirstOrDefault()
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-
-                            @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
-                            {
-                                <a class="btn btn-outline-primary" data-toggle="modal" data-target="#Invitations">New Invitation</a>
-                                <a class="btn btn-outline-success" data-toggle="modal" data-target="#ReviewInvitations">Manage Invitations</a>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-------------------------->
         <!-- Accounts Current Bal -->
@@ -234,72 +195,77 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-------------------------->
-    <!-- Master Control Board -->
-    <!-------------------------->
-
-    <div class="card-columns">
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-text text-success">Bank Accounts</h5>
-                <a class="btn btn-success" data-toggle="modal" data-target="#BankAcctLog">Manage</a>
-            </div>
-        </div>
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-text text-success">Plan vs Actual</h5>
-                <a class="btn btn-warning" data-toggle="modal" data-target="#PlanVsActual">Status</a>
-            </div>
-        </div>
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-text text-success">New Transaction</h5>
-                <a class="btn btn-primary" data-toggle="modal" data-target="#Transactions">Create</a>
-            </div>
-        </div>
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-text text-success">Transactions Log</h5>
-                <a class="btn btn-success" data-toggle="modal" data-target="#TransacRegister">Manage</a>
-            </div>
-        </div>
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-text text-success">Categories Log</h5>
-                <a class="btn btn-success" data-toggle="modal" data-target="#Categories">Manage</a>
-            </div>
-        </div>
-        <div class="card bg-light">
-            <div class="card-body text-center">
-                <h5 class="card-text text-success">Category Items Log</h5>
-                <a class="btn btn-success" data-toggle="modal" data-target="#CategoryItems">Manage</a>
-            </div>
-        </div>
-    </div>
-
-    <!------------------------>
-    <!-- Bal & Trans Charts -->
-    <!------------------------>
-    @*<div class="col-6">
-                <div class="card">
-                    <h6 class="card-header bg-light text-success">
-                        Recent Transactions
-                    </h6>
-                    <div class="card-body">
-                        <div height="400" id="TransactionChart">
-
-                        </div>
-                    </div>
-                    <div class="footer bg-transparent">
+        <!------------------------>
+        <!-- Transaction Charts -->
+        <!------------------------>
+        <div class="col-6">
+            <div class="card">
+                <h6 class="card-header bg-light text-success">
+                    Recent Transactions
+                </h6>
+                <div class="card-body">
+                    <div height="400" id="TransactionChart">
 
                     </div>
                 </div>
+                <div class="footer bg-transparent">
+
+                </div>
             </div>
-        </div>*@
+        </div>
+    </div>
 
 </div>
+
+<!-------------------------->
+<!-- Master Control Board -->
+<!-------------------------->
+
+<div class="card-columns">
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <h5 class="card-text text-success">House Members</h5>
+            <a class="btn btn-outline-warning" data-toggle="modal" data-target="#Occupants">View</a>
+            @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
+            {
+                <a class="btn btn-outline-primary" data-toggle="modal" data-target="#Invitations">Invite</a>
+                <a class="btn btn-outline-success" data-toggle="modal" data-target="#ReviewInvitations">Invitation Log</a>
+            }
+
+        </div>
+    </div>
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <h5 class="card-text text-success">Bank Accounts</h5>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#BankAcctLog">Manage</a>
+        </div>
+    </div>
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <h5 class="card-text text-success">New Transaction</h5>
+            <a class="btn btn-outline-primary" data-toggle="modal" data-target="#Transactions">Create</a>
+        </div>
+    </div>
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <h5 class="card-text text-success">Transactions Log</h5>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#TransacRegister">Manage</a>
+        </div>
+    </div>
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <h5 class="card-text text-success">Categories Log</h5>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#Categories">Manage</a>
+        </div>
+    </div>
+    <div class="card bg-light">
+        <div class="card-body text-center">
+            <h5 class="card-text text-success">Category Items Log</h5>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#CategoryItems">Manage</a>
+        </div>
+    </div>
+</div>
+
 
 <!------------------------------>
 <!-- Create Invitations Modal -->
@@ -347,9 +313,9 @@
     </div>
 </div>
 
-<!------------------------------>
-<!-- Review Invitations Modal -->
-<!------------------------------>
+<!--------------------------->
+<!-- Invitations Log Modal -->
+<!--------------------------->
 <div class="modal" id="ReviewInvitations">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -375,10 +341,10 @@
                     {
                         <tr>
                             <td>
-                                @householdInvitation.Created
+                                @householdInvitation.Created.ToString("MMM dd, yyyy")
                             </td>
                             <td>
-                                @householdInvitation.Expires
+                                @householdInvitation.Expires.ToString("MMM dd, yyyy")
                             </td>
                             <td>
                                 @householdInvitation.Accepted
@@ -463,52 +429,41 @@
     </div>
 </div>
 
-<!------------------------------------>
-<!-- Plan vs Actual Comparison Modal-->
-<!------------------------------------>
-<div class="modal" id="PlanVsActual">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<!------------------------------>
+<!-- Household Occupants Modal-->
+<!------------------------------>
+<div class="modal" id="Occupants">
+    <div class="modal-dialog modal-dialog-left">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title text-success">Plan vs Actual Spending</h4>
+                <h4 class="modal-title text-success">House Members</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <table class="table m-b-0 table-hover">
-                    <thead class="thead-success">
-                        <tr>
-                            <th>Category Item</th>
-                            <th>Description</th>
-                            <th>Budget Amount</th>
-                            <th>Actual Amount</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var categoryItem in Model.CategoryItems)
-                        {
+                <div class="card-body">
+                    <table class="table m-b-0 table-hover">
+                        <thead class="thead-success">
                             <tr>
-                                <td>
-                                    @categoryItem.Name
-                                </td>
-                                <td>
-                                    @categoryItem.Description
-                                </td>
-                                <td>
-                                    $@categoryItem.TargetAmount
-                                </td>
-                                <td>
-                                    $@categoryItem.ActualAmount
-                                </td>
-
+                                <th>First Name</th>
+                                <th>Role</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Household.Occupants)
+                            {
+                                <tr>
+                                    <td>@user.FirstName</td>
+                                    <td>
+                                        @UserManager.GetRolesAsync(user).Result.FirstOrDefault()
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
@@ -608,7 +563,7 @@
                                     @transaction.FPUser.FirstName
                                 </td>
                                 <td>
-                                    @transaction.Created
+                                    @transaction.Created.ToString("MMM dd, yyyy")
                                 </td>
                                 <td>
                                     @transaction.Memo

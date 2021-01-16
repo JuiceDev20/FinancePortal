@@ -42,7 +42,7 @@ namespace FinancePortal.Controllers
         {
             var result = new List<ChartModel>();
             var user = await _userManager.GetUserAsync(User);
-            foreach (var transaction in _context.Transaction.Include(u => u.FPUser.FirstName)
+            foreach (var transaction in _context.Transaction.Include(u => u.FPUser)
                 .Include(t => t.HouseholdBankAccount)
                 .Where(t => t.HouseholdBankAccount.HouseholdId == user.HouseholdId).ToList().OrderByDescending(t => t.Created).Take(5))
             {
