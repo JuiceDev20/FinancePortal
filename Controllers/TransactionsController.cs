@@ -81,6 +81,19 @@ namespace FinancePortal.Controllers
                     _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
+                else if (transaction.Type == Enums.TransactionType.Transfer)
+                {
+                    var originAccount = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
+                    originAccount.CurrentBalance -= transaction.Amount;
+                    _context.Update(originAccount);
+                    await _context.SaveChangesAsync();
+
+                    var receivingAccount = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);                
+                    receivingAccount.CurrentBalance += transaction.Amount;                
+                    _context.Update(receivingAccount);
+                    await _context.SaveChangesAsync();
+
+                }
                 else
                 {
                     //Withdrawal or PointOfSale or ACH 

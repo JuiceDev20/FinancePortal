@@ -237,31 +237,36 @@
     <div class="card bg-light">
         <div class="card-body text-center">
             <h5 class="card-text text-success">Bank Accounts</h5>
-            <a class="btn btn-outline-success" data-toggle="modal" data-target="#BankAcctLog">Manage</a>
+            <a class="btn btn-outline-info" data-toggle="modal" data-target="#BankAcctLog">Manage</a>
         </div>
     </div>
     <div class="card bg-light">
         <div class="card-body text-center">
             <h5 class="card-text text-success">New Transaction</h5>
             <a class="btn btn-outline-primary" data-toggle="modal" data-target="#Transactions">Create</a>
+            @if (User.IsInRole(nameof(HouseholdRole.HEAD)))
+            {
+                <a class="btn btn-outline-warning" data-toggle="modal" data-target="#Transfers">Transfer Funds</a>
+            }
+
         </div>
     </div>
     <div class="card bg-light">
         <div class="card-body text-center">
             <h5 class="card-text text-success">Transactions Log</h5>
-            <a class="btn btn-outline-success" data-toggle="modal" data-target="#TransacRegister">Manage</a>
+            <a class="btn btn-outline-info" data-toggle="modal" data-target="#TransacRegister">Manage</a>
         </div>
     </div>
     <div class="card bg-light">
         <div class="card-body text-center">
             <h5 class="card-text text-success">Categories Log</h5>
-            <a class="btn btn-outline-success" data-toggle="modal" data-target="#Categories">Manage</a>
+            <a class="btn btn-outline-info" data-toggle="modal" data-target="#Categories">Manage</a>
         </div>
     </div>
     <div class="card bg-light">
         <div class="card-body text-center">
             <h5 class="card-text text-success">Category Items Log</h5>
-            <a class="btn btn-outline-success" data-toggle="modal" data-target="#CategoryItems">Manage</a>
+            <a class="btn btn-outline-info" data-toggle="modal" data-target="#CategoryItems">Manage</a>
         </div>
     </div>
 </div>
@@ -473,7 +478,6 @@
     </div>
 </div>
 
-
 <!------------------------------->
 <!-- Create Transactions Modal -->
 <!------------------------------->
@@ -519,6 +523,60 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------->
+<!-- Transfer Funds Modal -->
+<!-------------------------->
+<div class="modal" id="Transfers">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Transfer Funds</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form asp-controller="Transactions" asp-action="Create" class="ml-2 mr-2" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @Html.Hidden("HouseholdId", Model.Household.Id)
+                    <div class="form-group">
+                        <label class="control-label">Type</label>
+                        <select name="Type" class="form-control" asp-items="@Html.GetEnumSelectList<TransactionType>()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">From Account</label>
+                        <select id="originAccount" name="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">To Account</label>
+                        <select id="receivingAccout" name="HouseholdBankAccountId" asp-items="ViewBag.HouseholdBankAccountId" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Memo</label>
+                        <input name="Memo" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Amount</label>
+                        <input name="Amount" class="form-control" type="number" step="any" min="0.01" max="99999999.99" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-outline-success" />
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+            </div>
+
         </div>
     </div>
 </div>
