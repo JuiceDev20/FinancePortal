@@ -60,10 +60,9 @@
                         <ul class="main-menu metismenu">
                             <li class="nav-link active"><span>Navigation</span></li>
                             <li><a asp-controller="Households" asp-action="Dashboard"><i class="icon-home"></i>Dashboard</a></li>
-                            <li><a asp-controller="HouseholdBankAccounts" asp-action="Create" asp-route-id="@householdId"><i class="icon-wallet"></i>Bank Accounts</a></li>  @*href="#" class="myBtn" data-toggle="modal" data-target="#BankAccounts"*@
-                            <li><a asp-controller="HouseholdCategories" asp-action="Create" asp-route-id="@householdId"><i class="icon-grid"></i>Categories</a></li>  @*href="#" class="myBtn" data-toggle="modal" data-target="#HouseholdCategories"*@
+                            <li><a asp-controller="HouseholdBankAccounts" asp-action="Create" asp-route-id="@householdId"><i class="icon-wallet"></i>Bank Accounts</a></li>  
+                            <li><a asp-controller="HouseholdCategories" asp-action="Create" asp-route-id="@householdId"><i class="icon-grid"></i>Categories</a></li>  
                             <li><a asp-controller="CategoryItems" asp-action="Create" asp-route-id="@householdId"><i class="icon-list"></i>Items</a></li>
-                            @*<li><a asp-controller="Transactions" asp-action="Create" asp-route-id="@householdId"><i class="icon-pencil"></i>Transactions</a></li>*@
 
                             <li><a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnurl="@Url.Action("Landing", "Home")"><i class="icon-power"></i>Logout</a></li>
 

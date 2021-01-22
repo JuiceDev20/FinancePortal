@@ -45,7 +45,7 @@
                                     @context.Users.Find(item.FPUserId).FullName
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Created)
+                                    @item.Created.ToString("MM/dd/yyyy")
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Memo)
