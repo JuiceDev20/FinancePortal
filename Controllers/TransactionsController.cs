@@ -64,31 +64,53 @@ namespace FinancePortal.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryItemId,HouseholdBankAccountId,Type,Memo,Amount")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("CategoryItemId,HouseholdBankAccountId,Type,Memo,Amount")] Transaction transaction, int OriginBankAccountId, int DestinationBankAccountId)
         {
             if (ModelState.IsValid)
             {
                 transaction.FPUserId = _userManager.GetUserId(User);
-                _context.Add(transaction);
-                await _context.SaveChangesAsync();
+                transaction.Created = DateTime.Now;
                 //1.Deacrease the Current Balance
-                var account = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
-                var oldBalance = account.CurrentBalance;
+                decimal oldBalance = 0;
+                HouseholdBankAccount account = new HouseholdBankAccount();
 
                 if (transaction.Type == Enums.TransactionType.Deposit)
                 {
+                    account = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
+                    oldBalance = account.CurrentBalance;
+                    _context.Add(transaction);
+                    await _context.SaveChangesAsync();
                     account.CurrentBalance += transaction.Amount;
                     _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
                 else if (transaction.Type == Enums.TransactionType.Transfer)
                 {
-                    var originAccount = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
+                    //Withdrawal Transaction for transfer
+
+                    transaction.HouseholdBankAccountId = OriginBankAccountId;
+                    transaction.Type = Enums.TransactionType.Withdrawal;
+                    _context.Add(transaction);
+                    await _context.SaveChangesAsync();
+
+                    //Deposit Transaction for transfer
+
+                    Transaction draftToAccount = new Transaction();
+                    draftToAccount.HouseholdBankAccountId = DestinationBankAccountId;
+                    draftToAccount.FPUserId = transaction.FPUserId;
+                    draftToAccount.Type = Enums.TransactionType.Deposit;
+                    draftToAccount.Memo = transaction.Memo;
+                    draftToAccount.Created = transaction.Created;
+                    draftToAccount.Amount = transaction.Amount;
+                    _context.Add(draftToAccount);
+                    await _context.SaveChangesAsync();
+
+                    var originAccount = await _context.HouseholdBankAccount.FindAsync(OriginBankAccountId);
                     originAccount.CurrentBalance -= transaction.Amount;
                     _context.Update(originAccount);
                     await _context.SaveChangesAsync();
 
-                    var receivingAccount = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);                
+                    var receivingAccount = await _context.HouseholdBankAccount.FindAsync(DestinationBankAccountId);                
                     receivingAccount.CurrentBalance += transaction.Amount;                
                     _context.Update(receivingAccount);
                     await _context.SaveChangesAsync();
