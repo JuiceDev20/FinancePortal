@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FinancePortal.Models.View_Models
 {
@@ -16,7 +13,6 @@ namespace FinancePortal.Models.View_Models
             CategoryItems = new List<CategoryItem>();
             HouseholdNotifications = new List<HouseholdNotification>();
             Transactions = new List<Transaction>();
-
         }
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(10, 2)")]
@@ -33,7 +29,6 @@ namespace FinancePortal.Models.View_Models
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(10, 2)")]
         public decimal CurrentBalance { get; set; }
-
 
         public int HouseholdId { get; set; }
 
@@ -64,7 +59,6 @@ namespace FinancePortal.Models.View_Models
         public Transaction Transaction { get; set; }  //If using a modal
 
         public List<Transaction> Transactions { get; set; }
-
 
     }
 }
