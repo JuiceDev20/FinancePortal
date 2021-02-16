@@ -72,11 +72,10 @@ namespace FinancePortal.Controllers
                 transaction.Created = DateTime.Now;
                 //1.Deacrease the Current Balance
                 decimal oldBalance = 0;
-                HouseholdBankAccount account = new HouseholdBankAccount();
+                HouseholdBankAccount account = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
 
                 if (transaction.Type == Enums.TransactionType.Deposit)
                 {
-                    account = await _context.HouseholdBankAccount.FindAsync(transaction.HouseholdBankAccountId);
                     oldBalance = account.CurrentBalance;
                     _context.Add(transaction);
                     await _context.SaveChangesAsync();
@@ -123,6 +122,7 @@ namespace FinancePortal.Controllers
                     //2.Increase the Actual Amount of associated Category Item
                     var categoryItem = await _context.CategoryItem.FindAsync(transaction.CategoryItemId);
                     categoryItem.ActualAmount += transaction.Amount;
+                    _context.Add(transaction);
                     _context.Update(categoryItem);
                     _context.Update(account);
                     await _context.SaveChangesAsync();
