@@ -36,13 +36,13 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.CategoryItemId)
+                                    @Html.DisplayFor(modelItem => item.CategoryItem)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.HouseholdBankAccountId)
                                 </td>
                                 <td>
-                                    @context.Users.Find(item.FPUserId).FullName
+                                    @context.Users.Find(item.FPUserId).FirstName
                                 </td>
                                 <td>
                                     @item.Created.ToString("MM/dd/yyyy")

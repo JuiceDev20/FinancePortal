@@ -11,14 +11,12 @@ namespace FinancePortal.Models
 
         public int HouseholdId { get; set; }
 
-
         public string FPUserId { get; set; }
 
         [Required]
         [StringLength(35, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string Name { get; set; }
-
-        
+      
         public AccountType AccountType { get; set; }
 
         [Column(TypeName = "decimal(10, 2)")]

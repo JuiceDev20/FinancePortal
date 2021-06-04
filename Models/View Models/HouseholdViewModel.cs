@@ -36,6 +36,8 @@ namespace FinancePortal.Models.View_Models
 
         public FPUser FPUser { get; set; }
 
+        public string FPUserId { get; set; }
+
         public HouseholdBankAccount HouseholdBankAccount { get; set; } //If using a modal
 
         public List<HouseholdBankAccount> HouseholdBankAccounts { get; set; }
